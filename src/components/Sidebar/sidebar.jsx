@@ -2,6 +2,7 @@ import React from 'react';
 import { Avatar, Button, Box, Grommet, Nav, Sidebar, Tip } from 'grommet';
 import { Table, TableAdd, Analytics } from 'grommet-icons';
 import logo from '../../assets/logo192.png'; // Adjust the path as necessary
+import { Link, useLocation } from 'react-router-dom';
 
 const avatar = 'https://avatars.githubusercontent.com/u/72570082?v=4';
 
@@ -46,29 +47,35 @@ const iconsMap = (color) => [
   <TableAdd color={color} />,
   <Analytics color={color} />,
 ];
-const SidebarButton = ({ iconName, index }) => {
+const SidebarButton = ({ iconName, index, path, currentPath }) => {
   const hoverColor = { color: 'accent-1', opacity: 0.9 };
+  const isActive = currentPath === path;
 
   return (
     <Box fill="horizontal">
-      {/* Second option to apply tip on button */}
       <Tip
         content={<Box>{iconName}</Box>}
         dropProps={{ align: { left: 'right' } }}
       >
-        <Button hoverIndicator={hoverColor} plain>
-          {({ hover }) => (
-            <Box pad={{ vertical: 'small' }} align="center">
-              {iconsMap(hover ? 'black' : 'white')[index]}
-            </Box>
-          )}
-        </Button>
+        <Link to={path}>
+          <Button hoverIndicator={hoverColor} plain>
+            {({ hover }) => (
+              <Box pad={{ vertical: '3dvh', horizontal: '2dvw' }} justify="center" align="center">
+                {iconsMap(isActive ? 'black' : hover ? 'black' : 'white')[index]}
+              </Box>
+            )}
+          </Button>
+        </Link>
       </Tip>
     </Box>
   );
 };
 
-export const SidebarTip = () => (
+export const SidebarTip = () => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  return(
   <Grommet theme={customTheme}>
     <Box direction="row" height={{ min: '100%' }}>
       <Box margin="0">
@@ -83,15 +90,26 @@ export const SidebarTip = () => (
           }
         >
           <Nav margin="-15px 0 0 0">
-            {['Dados', 'Lançamento', 'Dashboard'].map((iconName, index) => (
-              <SidebarButton key={iconName} iconName={iconName} index={index} />
-            ))}
-          </Nav>
+              {[
+                { name: 'Dados', path: '/home' },
+                { name: 'Lançamento', path: '/form' },
+                { name: 'Dashboard', path: '/dashboard' },
+              ].map((item, index) => (
+                <SidebarButton
+                  key={item.name}
+                  iconName={item.name}
+                  index={index}
+                  path={item.path}
+                  currentPath={currentPath}
+                />
+              ))}
+            </Nav>
         </Sidebar>
       </Box>
     </Box>
   </Grommet>
 );
+};
 
 SidebarTip.storyName = 'Sidebar';
 
