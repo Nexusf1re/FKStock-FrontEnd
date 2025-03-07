@@ -3,6 +3,33 @@ import { Grommet, Box, Heading, Table, TableBody, TableCell, TableHeader, TableR
 import { grommet } from 'grommet/themes';
 import { SidebarTip as Sidebar } from '../../components/Sidebar/sidebar';
 
+const tableData = {
+    headers: ['RC', 'Material', 'Marca', 'Un', 'Valor'],
+    rows: [
+        {
+            rc: '125468',
+            material: 'Betametasona',
+            marca: 'NA',
+            un: 'Pct',
+            valor: 'R$200,00'
+        },
+        {
+            rc: '1254625',
+            material: 'Celulose',
+            marca: 'NA',
+            un: 'Pct',
+            valor: 'R$1.500,00'
+        },
+        {
+            rc: '689872',
+            material: 'Luva Estéril',
+            marca: 'NA',
+            un: 'Pct',
+            valor: 'R$3.000,00'
+        }
+    ]
+};
+
 const Home = () => { 
     return (
         <Grommet theme={grommet} full>
@@ -23,40 +50,24 @@ const Home = () => {
                         <CardBody pad="medium" fill>
                             <Table>
                                 <TableHeader>
-                                    <TableRow >
-                                        <TableCell scope="col" border="bottom" background="light-1" pad="medium">
-                                            <strong>Name</strong>
-                                        </TableCell>
-                                        <TableCell scope="col" border="bottom" background="light-1" pad="medium">
-                                            <strong>Brand</strong>
-                                        </TableCell>
-                                        <TableCell scope="col" border="bottom" background="light-1" pad="medium">
-                                            <strong>Un</strong>
-                                        </TableCell>
-                                        <TableCell scope="col" border="bottom" background="light-1" pad="medium">
-                                            <strong>Price</strong>
-                                        </TableCell>
+                                    <TableRow>
+                                        {tableData.headers.map((header, index) => (
+                                            <TableCell key={index} scope="col" border="bottom" background="light-1" pad="medium">
+                                                <strong>{header}</strong>
+                                            </TableCell>
+                                        ))}
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    <TableRow hover>
-                                        <TableCell pad="medium">Betametasona</TableCell>
-                                        <TableCell pad="medium">General</TableCell>
-                                        <TableCell pad="medium">Pc</TableCell>
-                                        <TableCell pad="medium">R$200,00</TableCell>
-                                    </TableRow>
-                                    <TableRow hover>
-                                        <TableCell pad="medium">Celulose</TableCell>
-                                        <TableCell pad="medium">General</TableCell>
-                                        <TableCell pad="medium">Pc</TableCell>
-                                        <TableCell pad="medium">R$1.500,00</TableCell>
-                                    </TableRow>
-                                    <TableRow hover>
-                                        <TableCell pad="medium">Cloreto de Cobalto</TableCell>
-                                        <TableCell pad="medium">General</TableCell>
-                                        <TableCell pad="medium">Pc</TableCell>
-                                        <TableCell pad="medium">R$3.000,00</TableCell>
-                                    </TableRow>
+                                    {tableData.rows.map((row, index) => (
+                                        <TableRow key={index} hover>
+                                            <TableCell pad="medium">{row.rc}</TableCell>
+                                            <TableCell pad="medium">{row.material}</TableCell>
+                                            <TableCell pad="medium">{row.marca}</TableCell>
+                                            <TableCell pad="medium">{row.un}</TableCell>
+                                            <TableCell pad="medium">{row.valor}</TableCell>
+                                        </TableRow>
+                                    ))}
                                 </TableBody>
                             </Table>
                         </CardBody>

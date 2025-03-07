@@ -1,6 +1,6 @@
 import React from 'react';
-import { Avatar, Button, Box, Grommet, Nav, Sidebar, Stack, Tip } from 'grommet';
-import { Analytics, Calculator, Notification, Stakeholder } from 'grommet-icons';
+import { Avatar, Button, Box, Grommet, Nav, Sidebar, Tip } from 'grommet';
+import { Table, TableAdd, Analytics } from 'grommet-icons';
 import logo from '../../assets/logo192.png'; // Adjust the path as necessary
 
 const avatar = 'https://avatars.githubusercontent.com/u/72570082?v=4';
@@ -42,9 +42,9 @@ const SidebarHeader = () => (
 );
 
 const iconsMap = (color) => [
+  <Table color={color} />,
+  <TableAdd color={color} />,
   <Analytics color={color} />,
-  <Stakeholder color={color} />,
-  <Calculator color={color} />,
 ];
 const SidebarButton = ({ iconName, index }) => {
   const hoverColor = { color: 'accent-1', opacity: 0.9 };
@@ -83,7 +83,7 @@ export const SidebarTip = () => (
           }
         >
           <Nav margin="-15px 0 0 0">
-            {['Analytics', 'Stakeholder', 'Calculator'].map((iconName, index) => (
+            {['Dados', 'Lançamento', 'Dashboard'].map((iconName, index) => (
               <SidebarButton key={iconName} iconName={iconName} index={index} />
             ))}
           </Nav>
