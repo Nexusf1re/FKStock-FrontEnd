@@ -1,6 +1,6 @@
-import './App.css'; // Import the CSS file
+import './App.css';
 import React from 'react';
-import Home from './pages/home/home'; // Import the Home component
+import Home from './pages/Home/home';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
     <Router>
           <Routes>
             <Route path="/home" element={<Home />} />
-            {/* <Route path="/login" element={<Login />} /> */}
+            {/* <Route path="/form" element={<Form />} /> */}
           </Routes>
     </Router>
   );

@@ -95,6 +95,8 @@ export const SidebarTip = () => (
 
 SidebarTip.storyName = 'Sidebar';
 
-export default {
+const sidebarConfig = {
   title: 'Controls/Tip/Custom Themed/Sidebar',
 };
+
+export default sidebarConfig;
