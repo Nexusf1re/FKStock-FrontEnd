@@ -91,7 +91,7 @@ export const SidebarTip = () => {
         >
           <Nav margin="-15px 0 0 0">
               {[
-                { name: 'Dados', path: '/home' },
+                { name: 'Dados', path: '/' },
                 { name: 'Lançamento', path: '/form' },
                 { name: 'Dashboard', path: '/dashboard' },
               ].map((item, index) => (
