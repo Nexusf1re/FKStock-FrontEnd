@@ -72,9 +72,9 @@ Dados
             <TableRow key={item.Id} hover>
                 <TableCell pad="medium">{item.RC}</TableCell>
                 <TableCell pad="medium">{item.Material}</TableCell>
-                <TableCell pad="medium">{item.Qtd}</TableCell>
+                <TableCell pad="medium">{item.Quantidade}</TableCell>
                 <TableCell pad="medium">{item.Valor}</TableCell>
-                <TableCell pad="medium">{item.ValorNF}</TableCell>
+                <TableCell pad="medium">{item.Valor_NF}</TableCell>
                 <TableCell pad="medium">{item.Un}</TableCell>
                 <TableCell pad="medium">{item.Marca}</TableCell>
                 <TableCell pad="medium">{item.Recebimento}</TableCell>
