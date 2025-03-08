@@ -35,9 +35,9 @@ const SidebarHeader = () => (
     <Avatar
       background="linear-gradient(#6FFFB0 0%, #7D4CDB 100%)"
       border={{ color: 'white', size: 'small' }}
-      round="medium"
+      round="small"
     >
-      <Avatar src={logo} color="white" />
+      <Avatar src={logo} color="white" pad={{ horizontal: "40px !important" }} />
     </Avatar>
   </Box>
 );
@@ -60,7 +60,7 @@ const SidebarButton = ({ iconName, index, path, currentPath }) => {
         <Link to={path}>
           <Button hoverIndicator={hoverColor} plain>
             {({ hover }) => (
-              <Box pad={{ vertical: '3dvh', horizontal: '2dvw' }} justify="center" align="center">
+              <Box width="10px !important" pad={{ vertical: '30px', horizontal: '40px' }} justify="center" align="center">
                 {iconsMap(isActive ? 'black' : hover ? 'black' : 'white')[index]}
               </Box>
             )}
@@ -82,7 +82,7 @@ export const SidebarTip = () => {
         <Sidebar
           background="#3c6aaf"
           header={<SidebarHeader />}
-          pad={{ vertical: 'xsmall' }}
+          pad={{ vertical: '0' }}
           footer={
             <Box>
               <Avatar margin="small" src={avatar} />
