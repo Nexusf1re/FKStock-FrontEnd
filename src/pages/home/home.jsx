@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-Grommet, Box, Heading, Table, TableBody, TableCell, TableHeader,
-TableRow, Card, CardBody, CardHeader
-} from 'grommet';
+import { Grommet, Box, Heading, Table, TableBody, TableCell, TableHeader,TableRow, Card, CardBody, CardHeader } from 'grommet';
 import { grommet } from 'grommet/themes';
 import { SidebarTip as Sidebar } from '../../components/Sidebar/sidebar';
 
