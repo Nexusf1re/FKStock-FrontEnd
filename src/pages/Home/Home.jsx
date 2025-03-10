@@ -84,9 +84,9 @@ const Home = () => {
                                             key={item.Id} 
                                             hover 
                                             onClick={() => handleRowClick(item.Id)}
-                                            style={{ cursor: 'pointer', backgroundColor: item.hover ? '#f0f0f0' : 'white' }}
-                                            onMouseEnter={() => item.hover = true}
-                                            onMouseLeave={() => item.hover = false}
+                                            style={{ cursor: 'pointer' }}
+                                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f0f0f0'}
+                                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
                                         >
                                             <TableCell pad="medium">{item.RC}</TableCell>
                                             <TableCell pad="medium">{item.Material}</TableCell>
