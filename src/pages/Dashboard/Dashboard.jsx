@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
-import {
-    Grommet, Box, Heading, Form, FormField, TextInput, Button, DateInput
-} from 'grommet';
+import React from 'react';
+import { Grommet, Box, Heading } from 'grommet';
 import { grommet } from 'grommet/themes';
 import { SidebarTip } from '../../components/Sidebar/sidebar';
 
 const Dashboard = () => {
-    const [value, setValue] = useState({});
 
     return (
         <Grommet theme={grommet} full>
