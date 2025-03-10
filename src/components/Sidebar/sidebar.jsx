@@ -77,7 +77,7 @@ export const SidebarTip = () => {
 
   return(
   <Grommet theme={customTheme}>
-    <Box direction="row" height={{ min: '100%' }}>
+    <Box direction="row" height={{ min: '100vh' }}>
       <Box margin="0">
         <Sidebar
           background="#3c6aaf"
