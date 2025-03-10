@@ -83,13 +83,6 @@ export const SidebarTip = () => {
           background="#3c6aaf"
           header={<SidebarHeader />}
           pad={{ vertical: '0' }}
-          footer={
-            {/*
-            <Box>
-              <Avatar margin="small" src={avatar} />
-            </Box>
-         */ }
-        }
         >
           <Nav margin="-15px 0 0 0">
               {[
