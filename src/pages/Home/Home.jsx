@@ -13,7 +13,6 @@ const Home = () => {
         fetch(`${process.env.REACT_APP_API_URL}/api/items`)
             .then((res) => res.json())
             .then((data) => {
-                console.log(data);
                 setItems(data);
             })
             .catch((err) => console.error(err));

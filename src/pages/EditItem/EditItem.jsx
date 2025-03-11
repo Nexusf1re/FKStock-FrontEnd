@@ -93,7 +93,7 @@ const EditItem = () => {
                             <FormField name="Marca" label="Marca" required />
                             <FormField name="Recebimento" label="Recebimento" required>
                                 <DateInput
-                                    format="yyyy-mm-dd"
+                                    format="dd-mm-yyyy"
                                     name="Recebimento"
                                     value={item.Recebimento}
                                     onChange={({ value }) => setItem({ ...item, Recebimento: value })}
