@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Grommet, Box, Heading, Table, TableBody, TableCell, TableHeader, TableRow, Card, CardBody, CardHeader, TextInput } from 'grommet';
+import { Grommet, Box, Heading, DataTable, Card, CardBody, CardHeader } from 'grommet';
 import { grommet } from 'grommet/themes';
 import { SidebarTip as Sidebar } from '../../components/Sidebar/sidebar';
 import { useNavigate } from 'react-router-dom';
+import styles from './Home.module.css';
 
 const Home = () => {
     const [items, setItems] = useState([]);
-    const [filter, setFilter] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -19,12 +19,20 @@ const Home = () => {
             .catch((err) => console.error(err));
     }, []);
 
-    const filteredItems = items.filter(item => 
-        item.Material.toLowerCase().includes(filter.toLowerCase()) ||
-        item.RC.toLowerCase().includes(filter.toLowerCase())
-    );
+    const columns = [
+        { property: 'Id', header: 'Id'},
+        { property: 'RC', header: 'RC', primary: true },
+        { property: 'Material', header: 'Material', search: true },
+        { property: 'Quantidade', header: 'Qtd' },
+        { property: 'Valor', header: 'Valor' },
+        { property: 'Valor_NF', header: 'Valor NF' },
+        { property: 'Un', header: 'Un' },
+        { property: 'Marca', header: 'Marca' },
+        { property: 'Recebimento', header: 'Recebimento' },
+    ];
 
-    const handleRowClick = (id) => {
+    const handleRowClick = (event) => {
+        const id = event.datum.Id;
         navigate(`/edit/${id}`);
     };
 
@@ -36,70 +44,23 @@ const Home = () => {
                     <Heading level="2" margin="-17px 0px 0px 4px" color="#3c6aaf">
                         Dados
                     </Heading>
-                    <TextInput
-                        placeholder="Filtrar por Material ou RC"
-                        value={filter}
-                        onChange={event => setFilter(event.target.value)}
-                        margin={{ bottom: 'small' }}
-                    />
                     <Card background="white" margin={{ top: 'small' }} elevation="small" round="small" fill>
                         <CardHeader pad="medium" background="#3c6aaf">
                             <Heading level="3" margin="none" color="white">
                                 Stocks | Fresenius Kabi - PU ANÁPOLIS
                             </Heading>
                         </CardHeader>
-                        <CardBody pad="medium" fill>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableCell scope="col" border="bottom" background="light-1" pad="medium">
-                                            <strong>RC</strong>
-                                        </TableCell>
-                                        <TableCell scope="col" border="bottom" background="light-1" pad="medium">
-                                            <strong>Material</strong>
-                                        </TableCell>
-                                        <TableCell scope="col" border="bottom" background="light-1" pad="medium">
-                                            <strong>Qtd</strong>
-                                        </TableCell>
-                                        <TableCell scope="col" border="bottom" background="light-1" pad="medium">
-                                            <strong>Valor</strong>
-                                        </TableCell>
-                                        <TableCell scope="col" border="bottom" background="light-1" pad="medium">
-                                            <strong>Valor NF</strong>
-                                        </TableCell>
-                                        <TableCell scope="col" border="bottom" background="light-1" pad="medium">
-                                            <strong>Un</strong>
-                                        </TableCell>
-                                        <TableCell scope="col" border="bottom" background="light-1" pad="medium">
-                                            <strong>Marca</strong>
-                                        </TableCell>
-                                        <TableCell scope="col" border="bottom" background="light-1" pad="medium">
-                                            <strong>Recebimento</strong>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {filteredItems.map((item) => (
-                                        <TableRow 
-                                            key={item.Id} 
-                                            hover 
-                                            onClick={() => handleRowClick(item.Id)}
-                                            style={{ cursor: 'pointer' }}
-                                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f0f0f0'}
-                                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
-                                        >
-                                            <TableCell pad="medium">{item.RC}</TableCell>
-                                            <TableCell pad="medium">{item.Material}</TableCell>
-                                            <TableCell pad="medium">{item.Quantidade}</TableCell>
-                                            <TableCell pad="medium">{item.Valor}</TableCell>
-                                            <TableCell pad="medium">{item.Valor_NF}</TableCell>
-                                            <TableCell pad="medium">{item.Un}</TableCell>
-                                            <TableCell pad="medium">{item.Marca}</TableCell>
-                                            <TableCell pad="medium">{item.Recebimento}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
+                        <CardBody className={styles.tableCard} pad="medium" fill>
+                            <Box className={styles.tableContainer}>
+                                <DataTable
+                                    columns={columns}
+                                    data={items}
+                                    sortable
+                                    resizeable
+                                    onClickRow={handleRowClick}
+                                    primaryKey="Id"
+                                />
+                            </Box>
                         </CardBody>
                     </Card>
                 </Box>
