@@ -4,8 +4,6 @@ import { Table, TableAdd, Analytics } from 'grommet-icons';
 import logo from '../../assets/logo192.png'; // Adjust the path as necessary
 import { Link, useLocation } from 'react-router-dom';
 
-const avatar = 'https://avatars.githubusercontent.com/u/72570082?v=4';
-
 const customTheme = {
   global: {
     font: {
