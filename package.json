@@ -7,8 +7,10 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^13.5.0",
+    "browserify-fs": "^1.0.0",
     "grommet": "^2.45.1",
     "grommet-icons": "^4.12.4",
+    "path-browserify": "^1.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.2.0",
@@ -18,9 +20,9 @@
   },
   "main": "main.js",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-app-rewired start",
     "electron": "electron .",
-    "build": "react-scripts build",
+    "build": "react-app-rewired build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -43,6 +45,7 @@
     ]
   },
   "devDependencies": {
-    "electron": "^35.0.1"
+    "electron": "^35.0.1",
+    "react-app-rewired": "^2.2.1"
   }
 }
