@@ -2,6 +2,8 @@
   "name": "fkstock",
   "version": "0.1.0",
   "private": true,
+  "author": "Matteus Abreu",
+  "description": "Feito para controle otimizado de RC's da Fresenius Kabi",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -23,6 +25,7 @@
     "start": "react-app-rewired start",
     "electron": "electron .",
     "build": "react-app-rewired build",
+    "dist": "electron-builder",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -46,6 +49,13 @@
   },
   "devDependencies": {
     "electron": "^35.0.1",
-    "react-app-rewired": "^2.2.1"
+    "react-app-rewired": "^2.2.1",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "productName": "FKStock",
+    "win": {
+      "icon": "build/favicon.ico"
+    }
   }
 }

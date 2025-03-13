@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function UserInfo() {
+function Username() {
   const [user, setUser] = useState("");
 
   useEffect(() => {
@@ -13,4 +13,4 @@ function UserInfo() {
   return <div>Usuário atual: {user}</div>;
 }
 
-export default UserInfo;
+export default Username;
