@@ -15,7 +15,7 @@ app.whenReady().then(() => {
     }
   });
 
-  mainWindow.loadURL("http://localhost:3001");
+  mainWindow.loadURL("https://fk-stock-front-end-git-lab-matteus-projects.vercel.app?_vercel_share=6i0qkyHZaYtKMbMhh2KUVl2Tk2Ofp8Iu");
 
   const menu = Menu.buildFromTemplate([
     {
