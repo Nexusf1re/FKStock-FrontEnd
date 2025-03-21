@@ -4,6 +4,7 @@ import { grommet } from 'grommet/themes';
 import { SidebarTip } from '../../components/Sidebar/sidebar';
 import useForm from '../../hooks/useForm';
 import { submitForm } from '../../services/formService';
+import styles from './FormField.module.css';
 
 const MyForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,9 +42,10 @@ const MyForm = () => {
     <Grommet theme={grommet} full>
       <Box direction="row" fill>
         <SidebarTip />
-        <Box pad="medium" fill>
-          <Heading level="2" color="#3c6aaf">Lançamento de RC</Heading>
+        <Box pad="small" fill>
+          <Heading className={styles.heading} level="2" color="#3c6aaf">Lançamento de RC</Heading>
           <Form
+            className={styles.form}
             value={values}
             onChange={(nextValue) => {
               // If Recebimento ends up as an array, use the first item
@@ -58,89 +60,98 @@ const MyForm = () => {
             }}
             onSubmit={handleSubmit(onSubmit)}
           >
-            <Box direction="row" gap="medium">
+            <Box className={styles.box} direction="row" gap="medium">
               <Box basis="1/2" gap="small">
                 <FormField
+                  className={styles.formField}
                   name="RC"
                   label="RC"
                   required
-                  background="light-1"
+                  background="light-3"
                   round="small"
-                  margin={{ vertical: 'small' }}
+                  margin={{ vertical: 'xsmall' }}
                 >
                   <TextInput type="number" name="RC" />
                 </FormField>
                 <FormField
+                  className={styles.formField}
                   name="Material"
                   label="Material"
                   required
-                  background="light-1"
+                  background="light-3"
                   round="small"
-                  margin={{ vertical: 'small' }}
+                  margin={{ vertical: 'xsmall' }}
                 >
                   <TextInput name="Material" />
                 </FormField>
                 <FormField
+                  className={styles.formField}
                   name="Marca"
                   label="Marca"
                   required
-                  background="light-1"
+                  background="light-3"
                   round="small"
-                  margin={{ vertical: 'small' }}
+                  margin={{ vertical: 'xsmall' }}
                 >
                   <TextInput name="Marca" />
                 </FormField>
                 <FormField
+                  className={styles.formField}
                   name="Un"
                   label="Un"
                   required
-                  background="light-1"
+                  background="light-3"
                   round="small"
-                  margin={{ vertical: 'small' }}
+                  margin={{ vertical: 'xsmall' }}
                 >
                   <TextInput name="Un" />
                 </FormField>
               </Box>
               <Box basis="1/2" gap="small">
                 <FormField
+                  className={styles.formField}
                   name="Valor"
                   label="Valor"
                   required
-                  background="light-1"
+                  background="light-3"
                   round="small"
-                  margin={{ vertical: 'small' }}
+                  margin={{ vertical: 'xsmall' }}
                 >
                   <TextInput type="number" name="Valor" />
                 </FormField>
                 <FormField
+                  className={styles.formField}
                   name="Quantidade"
                   label="Quantidade"
                   required
-                  background="light-1"
+                  background="light-3"
                   round="small"
-                  margin={{ vertical: 'small' }}
+                  margin={{ vertical: 'xsmall' }}
                 >
                   <TextInput type="number" name="Quantidade" />
                 </FormField>
                 <FormField
+                 className={styles.formField}
                   name="Valor_NF"
                   label="Valor NF"
                   required
-                  background="light-1"
+                  background="light-3"
                   round="small"
-                  margin={{ vertical: 'small' }}
+                  margin={{ vertical: 'xsmall' }}
                 >
                   <TextInput type="number" name="Valor_NF" />
                 </FormField>
                 <FormField
+                  className={styles.formField}
                   name="Recebimento"
                   label="Recebimento"
                   required
-                  background="light-1"
+                  background="light-3"
                   round="small"
-                  margin={{ vertical: 'small' }}
+                  margin={{ vertical: 'xsmall' }}
                 >
                   <DateInput
+                    className={styles.formField}
                     name="Recebimento"
                     format="yyyy-mm-dd"
                     calendarProps={{ range: false }}
@@ -148,14 +159,15 @@ const MyForm = () => {
                 </FormField>
               </Box>
             </Box>
-            <Box margin={{ top: 'medium' }}>
-              <Button
-                type="submit"
-                primary
-                label={isSubmitting ? 'Salvando...' : 'Salvar'}
-                disabled={isSubmitting}
-              />
-            </Box>
+            
+              <button
+              className={styles.button}
+              type="submit"
+              primary
+              disabled={isSubmitting}>
+              Salvar
+              </button>
+           
           </Form>
         </Box>
       </Box>

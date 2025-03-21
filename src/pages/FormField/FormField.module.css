@@ -1,0 +1,29 @@
+.heading{
+    margin-top: 5px;
+}
+
+.form {
+    overflow: auto !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: auto !important;
+    font-size: 1rem !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.button{
+    margin-top: 9px !important;
+    background-color: #3c6aaf !important;
+    border-radius: 12px;
+    padding: 8px 15px;
+    font-size: 1rem;
+    color: white;
+    outline: 0;
+    cursor: pointer;
+}
+
+.button:hover{
+    background-color: #3c6aaf !important;
+    outline: #3c6aaf !important;
+}
