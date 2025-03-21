@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Button, Box, Grommet, Nav, Sidebar, Tip } from 'grommet';
+import { Avatar, Button, Box, Grommet, Nav, Sidebar, Tip, ResponsiveContext } from 'grommet';
 import { Table, TableAdd, Analytics } from 'grommet-icons';
 import logo from '../../assets/logo192.png'; // Adjust the path as necessary
 import { Link, useLocation } from 'react-router-dom';
@@ -38,7 +38,7 @@ const SidebarHeader = () => (
       border={{ color: 'white', size: 'xsmall' }}
       round="small"
     >
-      <Avatar src={logo} color="white" pad={{ horizontal: "40px !important" }} />
+      <Avatar src={logo} color="white"/>
     </Avatar>
   </Box>
 );
@@ -73,19 +73,56 @@ const SidebarButton = ({ iconName, index, path, currentPath }) => {
 };
 
 export const SidebarTip = () => {
+  const size = React.useContext(ResponsiveContext);
   const location = useLocation();
   const currentPath = location.pathname;
 
-  return(
-  <Grommet theme={customTheme}>
-    <Box direction="row" height={{ min: '100vh' }}>
-      <Box margin="0">
-        <Sidebar
+  if (size === 'small') {
+    return (
+      <Grommet className={styles.groomet} theme={customTheme}>
+        <Box
+          direction="row"
           background="#3c6aaf"
-          header={<SidebarHeader />}
-          pad={{ vertical: '0' }}
+          justify="center"
+          align="center"
+          height="80px"
+          box-Sizing="border-box"
+          style={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}
         >
-          <Nav margin="-15px 0 0 0">
+          <Sidebar
+            header={<SidebarHeader />}
+          ></Sidebar>
+
+          <Nav direction="row">
+            {[
+              { name: 'Dados', path: '/' },
+              { name: 'Lançamento', path: '/form' },
+              { name: 'Dashboard', path: '/dashboard' },
+            ].map((item, index) => (
+              <SidebarButton
+                key={item.name}
+                iconName={item.name}
+                index={index}
+                path={item.path}
+                currentPath={currentPath}
+              />
+            ))}
+          </Nav>
+        </Box>
+      </Grommet>
+    );
+  }
+
+  return (
+    <Grommet className={styles.groomet} theme={customTheme}>
+      <Box direction="row" height={{ min: '100vh' }}>
+        <Box margin="0">
+          <Sidebar
+            background="#3c6aaf"
+            header={<SidebarHeader />}
+            pad={{ vertical: '0' }}
+          >
+            <Nav margin="-15px 0 0 0">
               {[
                 { name: 'Dados', path: '/' },
                 { name: 'Lançamento', path: '/form' },
@@ -100,11 +137,11 @@ export const SidebarTip = () => {
                 />
               ))}
             </Nav>
-        </Sidebar>
+          </Sidebar>
+        </Box>
       </Box>
-    </Box>
-  </Grommet>
-);
+    </Grommet>
+  );
 };
 
 SidebarTip.storyName = 'Sidebar';

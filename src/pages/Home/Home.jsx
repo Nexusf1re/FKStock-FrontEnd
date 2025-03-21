@@ -40,7 +40,7 @@ const Home = () => {
             <Box direction="row" fill>
                 <Sidebar />
                 <Box pad="medium" background="light-2" fill>
-                    <Heading level="2" margin="-17px 0px 0px 4px" color="#3c6aaf">
+                    <Heading level="2" margin="0px 0px 0px 4px" color="#3c6aaf">
                         Dados
                     </Heading>
                     <Card background="white" margin={{ top: 'small' }} elevation="small" round="small" fill>
