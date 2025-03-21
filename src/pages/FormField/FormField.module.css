@@ -13,17 +13,18 @@
 }
 
 .button{
-    margin-top: 9px !important;
+    margin: 10px 5px;
     background-color: #3c6aaf !important;
     border-radius: 12px;
-    padding: 8px 15px;
+    padding: 10px 15px;
     font-size: 1rem;
     color: white;
-    outline: 0;
     cursor: pointer;
+    transition: all 0.3s ease;
+    border: none !important;
 }
 
 .button:hover{
     background-color: #3c6aaf !important;
-    outline: #3c6aaf !important;
+    scale: 1.1;
 }
