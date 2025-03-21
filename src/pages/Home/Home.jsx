@@ -20,7 +20,7 @@ const Home = () => {
 
     const columns = [
         { property: 'Id', header: 'Id'},
-        { property: 'RC', header: 'RC', primary: true },
+        { property: 'RC', header: 'RC', primary: true, search: true },
         { property: 'Material', header: 'Material', search: true },
         { property: 'Quantidade', header: 'Qtd' },
         { property: 'Valor', header: 'Valor' },
