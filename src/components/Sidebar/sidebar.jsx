@@ -3,6 +3,9 @@ import { Avatar, Button, Box, Grommet, Nav, Sidebar, Tip } from 'grommet';
 import { Table, TableAdd, Analytics } from 'grommet-icons';
 import logo from '../../assets/logo192.png'; // Adjust the path as necessary
 import { Link, useLocation } from 'react-router-dom';
+import styles from './sidebar.module.css';
+
+const popupColor = '#1bc2ecde';
 
 const customTheme = {
   global: {
@@ -21,7 +24,7 @@ const customTheme = {
       animation: 'slideRight',
       margin: 'small',
       pad: 'small',
-      background: { color: 'accent-1', opacity: 0.9 },
+      background: { color: `${popupColor}`, opacity: 0.7 },
       round: { size: 'medium', corner: 'right' },
       flex: false, // so Tip won't get cut on a window resize
     },
@@ -29,10 +32,10 @@ const customTheme = {
 };
 
 const SidebarHeader = () => (
-  <Box pad="small">
+  <Box className={styles.logoBox} pad="small">
     <Avatar
-      background="linear-gradient(#6FFFB0 0%, #7D4CDB 100%)"
-      border={{ color: 'white', size: 'small' }}
+      background="linear-gradient(#6FFFB0 0%, #3c6aaf 100%)"
+      border={{ color: 'white', size: 'xsmall' }}
       round="small"
     >
       <Avatar src={logo} color="white" pad={{ horizontal: "40px !important" }} />
@@ -46,11 +49,11 @@ const iconsMap = (color) => [
   <Analytics color={color} />,
 ];
 const SidebarButton = ({ iconName, index, path, currentPath }) => {
-  const hoverColor = { color: 'accent-1', opacity: 0.9 };
+  const hoverColor = { color: `${popupColor}`, opacity: 0.7 };
   const isActive = currentPath === path;
 
   return (
-    <Box fill="horizontal">
+    <Box fill="vertical">
       <Tip
         content={<Box>{iconName}</Box>}
         dropProps={{ align: { left: 'right' } }}
