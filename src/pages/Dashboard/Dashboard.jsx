@@ -11,7 +11,8 @@ const Dashboard = () => {
                 <Box pad="medium" width="large">
                     <Heading level="2" color="#3c6aaf">Análise de Materiais</Heading>
                     <Box fill>
-                        
+                    
+                            
                     </Box>
 
                 </Box>

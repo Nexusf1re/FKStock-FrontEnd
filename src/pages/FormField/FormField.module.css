@@ -9,7 +9,7 @@
     height: auto !important;
     font-size: 1rem !important;
     align-items: center !important;
-    justify-content: center !important;
+    padding: 5px;
 }
 
 .button{
@@ -25,6 +25,7 @@
 }
 
 .button:hover{
-    background-color: #3c6aaf !important;
-    scale: 1.1;
+    background-color: #115ac8 !important;
+    font-size: 1.0rem;
+    box-shadow: 0 0 10px #115ac8ce !important;
 }
