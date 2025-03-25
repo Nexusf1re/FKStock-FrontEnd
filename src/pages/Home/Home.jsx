@@ -18,14 +18,29 @@ const Home = () => {
             .catch((err) => console.error(err));
     }, []);
 
+    const formatCurrency = (value) => {
+        return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+        }).format(value);
+    };
+
     const columns = [
-        { property: 'Id', header: 'Id'},
+        { property: 'Id', header: 'Id' },
         { property: 'RC', header: 'RC', primary: true, search: true },
         { property: 'Material', header: 'Material', search: true },
         { property: 'Quantidade', header: 'Qtd' },
-        { property: 'Valor', header: 'Valor' },
-        { property: 'Valor_NF', header: 'Valor NF' },
         { property: 'Un', header: 'Un' },
+        { 
+            property: 'Valor', 
+            header: 'Valor RC', 
+            render: (datum) => formatCurrency(datum.Valor) 
+        },
+        { 
+            property: 'Valor_NF', 
+            header: 'Valor NF', 
+            render: (datum) => formatCurrency(datum.Valor_NF) 
+        },
         { property: 'Marca', header: 'Marca' },
         { property: 'Recebimento', header: 'Recebimento' },
     ];
