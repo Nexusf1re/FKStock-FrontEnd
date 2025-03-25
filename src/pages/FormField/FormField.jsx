@@ -84,40 +84,17 @@ const MyForm = () => {
                 >
                   <TextInput name="Material" />
                 </FormField>
-                <FormField
-                  className={styles.formField}
-                  name="Marca"
-                  label="Marca"
-                  required
-                  background="light-3"
-                  round="small"
-                  margin={{ vertical: 'xsmall' }}
-                >
-                  <TextInput name="Marca" />
-                </FormField>
+              
                 <FormField
                   className={styles.formField}
                   name="Un"
-                  label="Un"
+                  label="Unidade"
                   required
                   background="light-3"
                   round="small"
                   margin={{ vertical: 'xsmall' }}
                 >
                   <TextInput name="Un" />
-                </FormField>
-              </Box>
-              <Box basis="1/2" gap="small">
-                <FormField
-                  className={styles.formField}
-                  name="Valor"
-                  label="Valor"
-                  required
-                  background="light-3"
-                  round="small"
-                  margin={{ vertical: 'xsmall' }}
-                >
-                  <TextInput type="number" name="Valor" />
                 </FormField>
                 <FormField
                   className={styles.formField}
@@ -130,8 +107,23 @@ const MyForm = () => {
                 >
                   <TextInput type="number" name="Quantidade" />
                 </FormField>
+              </Box>
+              
+              <Box basis="1/2" gap="small">
                 <FormField
-                 className={styles.formField}
+                  className={styles.formField}
+                  name="Valor"
+                  label="Valor RC"
+                  required
+                  background="light-3"
+                  round="small"
+                  margin={{ vertical: 'xsmall' }}
+                >
+                  <TextInput type="number" name="Valor" />
+                </FormField>
+            
+                <FormField
+                  className={styles.formField}
                   name="Valor_NF"
                   label="Valor NF"
                   required
@@ -140,6 +132,17 @@ const MyForm = () => {
                   margin={{ vertical: 'xsmall' }}
                 >
                   <TextInput type="number" name="Valor_NF" />
+                </FormField>
+                <FormField
+                  className={styles.formField}
+                  name="Marca"
+                  label="Marca"
+                  required
+                  background="light-3"
+                  round="small"
+                  margin={{ vertical: 'xsmall' }}
+                >
+                  <TextInput name="Marca" />
                 </FormField>
                 <FormField
                   className={styles.formField}
@@ -159,15 +162,15 @@ const MyForm = () => {
                 </FormField>
               </Box>
             </Box>
-            
-              <button
+
+            <button
               className={styles.button}
               type="submit"
               primary
               disabled={isSubmitting}>
               Salvar
-              </button>
-           
+            </button>
+
           </Form>
         </Box>
       </Box>
