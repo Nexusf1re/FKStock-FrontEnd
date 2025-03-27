@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Grommet, Box, Heading, Form, FormField, Button, Layer, Text, DateInput } from 'grommet';
 import { grommet } from 'grommet/themes';
 import { SidebarTip as Sidebar } from '../../components/Sidebar/sidebar';
+import { fetchItemById, updateItem, deleteItem } from '../../services/editService';
 
 const EditItem = () => {
     const { id } = useParams();
@@ -20,56 +21,42 @@ const EditItem = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_API_URL}/api/items/${id}`)
-            .then((res) => res.json())
-            .then((data) => setItem({
-                RC: data.RC || '',
-                Material: data.Material || '',
-                Quantidade: data.Quantidade || '',
-                Valor: data.Valor || '',
-                Valor_NF: data.Valor_NF || '',
-                Un: data.Un || '',
-                Marca: data.Marca || '',
-                Recebimento: data.Recebimento ? new Date(data.Recebimento).toISOString().split('T')[0] : ''
-            }))
-            .catch((err) => console.error(err));
+        const loadItem = async () => {
+            try {
+                const data = await fetchItemById(id);
+                setItem({
+                    RC: data.RC || '',
+                    Material: data.Material || '',
+                    Quantidade: data.Quantidade || '',
+                    Valor: data.Valor || '',
+                    Valor_NF: data.Valor_NF || '',
+                    Un: data.Un || '',
+                    Marca: data.Marca || '',
+                    Recebimento: data.Recebimento || ''
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        loadItem();
     }, [id]);
 
-    const handleSubmit = (updatedItem) => {
-        // Convert Recebimento to a date format that PostgreSQL can accept
-        const formattedItem = {
-            ...updatedItem,
-            Recebimento: updatedItem.Recebimento ? new Date(updatedItem.Recebimento).toISOString().split('T')[0] : null
-        };
-
-        console.log('Updating item:', formattedItem); // Log para depuração
-        fetch(`${process.env.REACT_APP_API_URL}/api/items/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formattedItem),
-        })
-            .then((res) => {
-                if (res.ok) {
-                    console.log('Update successful');
-                    navigate('/');
-                } else {
-                    console.error('Update failed');
-                }
-            })
-            .catch((err) => console.error('Error:', err));
+    const handleSubmit = async () => {
+        try {
+            await updateItem(id, item);
+            navigate('/');
+        } catch (error) {
+            console.error('Error updating item:', error);
+        }
     };
 
-    const handleDelete = () => {
-        fetch(`${process.env.REACT_APP_API_URL}/api/items/${id}`, { method: 'DELETE' })
-            .then((res) => {
-                if (res.ok) {
-                    console.log('Delete successful');
-                    navigate('/');
-                } else {
-                    console.error('Delete failed');
-                }
-            })
-            .catch((err) => console.error('Error:', err));
+    const handleDelete = async () => {
+        try {
+            await deleteItem(id);
+            navigate('/');
+        } catch (error) {
+            console.error('Error deleting item:', error);
+        }
     };
 
     if (!item) return <div>Loading...</div>;
@@ -82,7 +69,21 @@ const EditItem = () => {
                     <Heading level="2" margin="none" color="#3c6aaf">
                         Editar Item
                     </Heading>
-                    <Form value={item} onChange={setItem} onSubmit={({ value }) => handleSubmit(value)}>
+                    <Form
+                        value={item}
+                        onChange={(nextValue) => {
+                            // If Recebimento ends up as an array, use the first item
+                            if (Array.isArray(nextValue.Recebimento)) {
+                                nextValue.Recebimento = nextValue.Recebimento[0];
+                            }
+                            // Convert "2025-03-13T03:00:00.000Z" to just "2025-03-13"
+                            if (typeof nextValue.Recebimento === 'string') {
+                                nextValue.Recebimento = nextValue.Recebimento.split('T')[0];
+                            }
+                            setItem(nextValue);
+                        }}
+                        onSubmit={({ value }) => handleSubmit(value)}
+                    >
                         <Box direction="row" gap="medium" wrap>
                             <FormField name="RC" label="RC" required />
                             <FormField name="Material" label="Material" required />
@@ -93,10 +94,10 @@ const EditItem = () => {
                             <FormField name="Marca" label="Marca" required />
                             <FormField name="Recebimento" label="Recebimento" required>
                                 <DateInput
-                                    format="dd-mm-yyyy"
                                     name="Recebimento"
+                                    format="yyyy-mm-dd"
+                                    calendarProps={{ range: false }}
                                     value={item.Recebimento}
-                                    onChange={({ value }) => setItem({ ...item, Recebimento: value })}
                                 />
                             </FormField>
                         </Box>
