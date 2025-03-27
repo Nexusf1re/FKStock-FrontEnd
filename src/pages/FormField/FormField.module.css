@@ -1,5 +1,6 @@
 .heading{
     margin-top: 5px;
+    text-transform: uppercase;
 }
 
 .form {
@@ -12,6 +13,10 @@
     padding: 5px;
 }
 
+.formField label {
+    text-transform: uppercase;
+}
+
 .button{
     margin: 10px 5px;
     background-color: #3c6aaf !important;
@@ -22,6 +27,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
     border: none !important;
+    text-transform: uppercase;
 }
 
 .button:hover{

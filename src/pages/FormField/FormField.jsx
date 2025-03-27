@@ -19,6 +19,11 @@ const MyForm = () => {
     Recebimento: ''
   });
 
+  const handleUppercaseChange = (event) => {
+    const { name, value } = event.target;
+    handleChange({ ...values, [name]: value.toUpperCase() });
+  };
+
   const onSubmit = async (formData) => {
     setIsSubmitting(true);
     await submitForm(formData);
@@ -48,11 +53,9 @@ const MyForm = () => {
             className={styles.form}
             value={values}
             onChange={(nextValue) => {
-              // If Recebimento ends up as an array, use the first item
               if (Array.isArray(nextValue.Recebimento)) {
                 nextValue.Recebimento = nextValue.Recebimento[0];
               }
-              // Convert "2025-03-13T03:00:00.000Z" to just "2025-03-13"
               if (typeof nextValue.Recebimento === 'string') {
                 nextValue.Recebimento = nextValue.Recebimento.split('T')[0];
               }
@@ -71,7 +74,12 @@ const MyForm = () => {
                   round="small"
                   margin={{ vertical: 'xsmall' }}
                 >
-                  <TextInput type="number" name="RC" />
+                  <TextInput
+                    type="number"
+                    name="RC"
+                    value={values.RC}
+                    onChange={handleUppercaseChange}
+                  />
                 </FormField>
                 <FormField
                   className={styles.formField}
@@ -82,9 +90,12 @@ const MyForm = () => {
                   round="small"
                   margin={{ vertical: 'xsmall' }}
                 >
-                  <TextInput name="Material" />
+                  <TextInput
+                    name="Material"
+                    value={values.Material}
+                    onChange={handleUppercaseChange}
+                  />
                 </FormField>
-              
                 <FormField
                   className={styles.formField}
                   name="Un"
@@ -94,7 +105,11 @@ const MyForm = () => {
                   round="small"
                   margin={{ vertical: 'xsmall' }}
                 >
-                  <TextInput name="Un" />
+                  <TextInput
+                    name="Un"
+                    value={values.Un}
+                    onChange={handleUppercaseChange}
+                  />
                 </FormField>
                 <FormField
                   className={styles.formField}
@@ -105,10 +120,15 @@ const MyForm = () => {
                   round="small"
                   margin={{ vertical: 'xsmall' }}
                 >
-                  <TextInput type="number" name="Quantidade" />
+                  <TextInput
+                    type="number"
+                    name="Quantidade"
+                    value={values.Quantidade}
+                    onChange={handleUppercaseChange}
+                  />
                 </FormField>
               </Box>
-              
+
               <Box basis="1/2" gap="small">
                 <FormField
                   className={styles.formField}
@@ -119,9 +139,13 @@ const MyForm = () => {
                   round="small"
                   margin={{ vertical: 'xsmall' }}
                 >
-                  <TextInput type="number" name="Valor" />
+                  <TextInput
+                    type="number"
+                    name="Valor"
+                    value={values.Valor}
+                    onChange={handleUppercaseChange}
+                  />
                 </FormField>
-            
                 <FormField
                   className={styles.formField}
                   name="Valor_NF"
@@ -131,7 +155,12 @@ const MyForm = () => {
                   round="small"
                   margin={{ vertical: 'xsmall' }}
                 >
-                  <TextInput type="number" name="Valor_NF" />
+                  <TextInput
+                    type="number"
+                    name="Valor_NF"
+                    value={values.Valor_NF}
+                    onChange={handleUppercaseChange}
+                  />
                 </FormField>
                 <FormField
                   className={styles.formField}
@@ -142,7 +171,11 @@ const MyForm = () => {
                   round="small"
                   margin={{ vertical: 'xsmall' }}
                 >
-                  <TextInput name="Marca" />
+                  <TextInput
+                    name="Marca"
+                    value={values.Marca}
+                    onChange={handleUppercaseChange}
+                  />
                 </FormField>
                 <FormField
                   className={styles.formField}
@@ -158,6 +191,8 @@ const MyForm = () => {
                     name="Recebimento"
                     format="yyyy-mm-dd"
                     calendarProps={{ range: false }}
+                    value={values.Recebimento}
+                    onChange={handleUppercaseChange}
                   />
                 </FormField>
               </Box>
@@ -170,7 +205,6 @@ const MyForm = () => {
               disabled={isSubmitting}>
               Salvar
             </button>
-
           </Form>
         </Box>
       </Box>

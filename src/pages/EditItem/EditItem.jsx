@@ -72,15 +72,24 @@ const EditItem = () => {
                     <Form
                         value={item}
                         onChange={(nextValue) => {
+                            // Convert all string fields to uppercase
+                            const uppercasedValue = Object.fromEntries(
+                                Object.entries(nextValue).map(([key, value]) => [
+                                    key,
+                                    typeof value === 'string' ? value.toUpperCase() : value,
+                                ])
+                            );
+
                             // If Recebimento ends up as an array, use the first item
-                            if (Array.isArray(nextValue.Recebimento)) {
-                                nextValue.Recebimento = nextValue.Recebimento[0];
+                            if (Array.isArray(uppercasedValue.Recebimento)) {
+                                uppercasedValue.Recebimento = uppercasedValue.Recebimento[0];
                             }
                             // Convert "2025-03-13T03:00:00.000Z" to just "2025-03-13"
-                            if (typeof nextValue.Recebimento === 'string') {
-                                nextValue.Recebimento = nextValue.Recebimento.split('T')[0];
+                            if (typeof uppercasedValue.Recebimento === 'string') {
+                                uppercasedValue.Recebimento = uppercasedValue.Recebimento.split('T')[0];
                             }
-                            setItem(nextValue);
+
+                            setItem(uppercasedValue);
                         }}
                         onSubmit={({ value }) => handleSubmit(value)}
                     >
