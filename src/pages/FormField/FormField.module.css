@@ -1,3 +1,17 @@
+.box {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  
+  .column {
+    flex: 1 1 48%; /* Cada coluna ocupa 48% da largura */
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
 .heading{
     margin-top: 5px;
     text-transform: uppercase;
@@ -11,6 +25,10 @@
     font-size: 1rem !important;
     align-items: center !important;
     padding: 5px;
+}
+
+.formField {
+  width: 100%; /* Os campos ocupam toda a largura da coluna */
 }
 
 .formField label {

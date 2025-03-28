@@ -31,7 +31,6 @@ const MyForm = () => {
     setIsSubmitting(true);
     await submitForm(formData);
 
-    // Limpar os campos após envio
     handleChange({
       RC: '',
       Material: '',
@@ -45,6 +44,23 @@ const MyForm = () => {
 
     setIsSubmitting(false);
   };
+
+  const formFields = [
+    { name: 'RC', label: 'RC', type: 'number', required: true },
+    { name: 'Material', label: 'Material', type: 'text', required: true },
+    { name: 'Un', label: 'Unidade', type: 'text', required: true },
+    { name: 'Quantidade', label: 'Quantidade', type: 'number', required: true },
+    { name: 'Valor', label: 'Valor RC', type: 'number', required: true },
+    { name: 'Valor_NF', label: 'Valor NF', type: 'number', required: true },
+    { name: 'Marca', label: 'Marca', type: 'text', required: true },
+    { name: 'Recebimento', label: 'Recebimento', type: 'date', required: true },
+    { name: 'RCLine', label: 'Linha RC', type: 'text', required: true },
+    { name: 'SAPCode', label: 'Código SAP', type: 'text', required: true },
+    { name: 'RCValue', label: 'Valor RC', type: 'number', required: true },
+    { name: 'Order', label: 'Pedido', type: 'text', required: false },
+    { name: 'OrderValue', label: 'Valor Pedido', type: 'number', required: false },
+    { name: 'Requester', label: 'Solicitante', type: 'text', required: true }
+  ];
 
   return (
     <Grommet theme={grommet} full>
@@ -66,151 +82,70 @@ const MyForm = () => {
             }}
             onSubmit={handleSubmit(onSubmit)}
           >
-            <Box className={styles.box} direction="row" gap="medium">
-              <Box basis="1/2" gap="small">
-                <FormField
-                  className={styles.formField}
-                  name="RC"
-                  label="RC"
-                  required
-                  background="light-3"
-                  round="small"
-                  margin={{ vertical: 'xsmall' }}
-                >
-                  <TextInput
-                    type="number"
-                    name="RC"
-                    value={values.RC}
-                    onChange={handleUppercaseChange}
-                  />
-                </FormField>
-                <FormField
-                  className={styles.formField}
-                  name="Material"
-                  label="Material"
-                  required
-                  background="light-3"
-                  round="small"
-                  margin={{ vertical: 'xsmall' }}
-                >
-                  <TextInput
-                    name="Material"
-                    value={values.Material}
-                    onChange={handleUppercaseChange}
-                  />
-                </FormField>
-                <FormField
-                  className={styles.formField}
-                  name="Un"
-                  label="Unidade"
-                  required
-                  background="light-3"
-                  round="small"
-                  margin={{ vertical: 'xsmall' }}
-                >
-                  <TextInput
-                    name="Un"
-                    value={values.Un}
-                    onChange={handleUppercaseChange}
-                  />
-                </FormField>
-                <FormField
-                  className={styles.formField}
-                  name="Quantidade"
-                  label="Quantidade"
-                  required
-                  background="light-3"
-                  round="small"
-                  margin={{ vertical: 'xsmall' }}
-                >
-                  <TextInput
-                    type="number"
-                    name="Quantidade"
-                    value={values.Quantidade}
-                    onChange={handleUppercaseChange}
-                  />
-                </FormField>
-              </Box>
-
-              <Box basis="1/2" gap="small">
-                <FormField
-                  className={styles.formField}
-                  name="Valor"
-                  label="Valor RC"
-                  required
-                  background="light-3"
-                  round="small"
-                  margin={{ vertical: 'xsmall' }}
-                >
-                  <TextInput
-                    type="number"
-                    name="Valor"
-                    value={values.Valor}
-                    onChange={handleUppercaseChange}
-                  />
-                </FormField>
-                <FormField
-                  className={styles.formField}
-                  name="Valor_NF"
-                  label="Valor NF"
-                  required
-                  background="light-3"
-                  round="small"
-                  margin={{ vertical: 'xsmall' }}
-                >
-                  <TextInput
-                    type="number"
-                    name="Valor_NF"
-                    value={values.Valor_NF}
-                    onChange={handleUppercaseChange}
-                  />
-                </FormField>
-                <FormField
-                  className={styles.formField}
-                  name="Marca"
-                  label="Marca"
-                  required
-                  background="light-3"
-                  round="small"
-                  margin={{ vertical: 'xsmall' }}
-                >
-                  <TextInput
-                    name="Marca"
-                    value={values.Marca}
-                    onChange={handleUppercaseChange}
-                  />
-                </FormField>
-                <FormField
-                  className={styles.formField}
-                  name="Recebimento"
-                  label="Recebimento"
-                  required
-                  background="light-3"
-                  round="small"
-                  margin={{ vertical: 'xsmall' }}
-                >
-                  <DateInput
+            <Box className={styles.box}>
+              <Box className={styles.column}>
+                {formFields.slice(0, Math.ceil(formFields.length / 2)).map((field, index) => (
+                  <FormField
+                    key={index}
                     className={styles.formField}
-                    name="Recebimento"
-                    format="yyyy-mm-dd"
-                    calendarProps={{ range: false }}
-                    value={values.Recebimento}
-                    onChange={handleUppercaseChange}
-                  />
-                </FormField>
+                    name={field.name}
+                    label={field.label}
+                    required={field.required}
+                    background="light-3"
+                    round="small"
+                    margin={{ vertical: 'xsmall' }}
+                  >
+                    {field.type === 'date' ? (
+                      <DateInput
+                        className={styles.formField}
+                        name={field.name}
+                        format="yyyy-mm-dd"
+                        calendarProps={{ range: false }}
+                        value={values[field.name]}
+                        onChange={handleUppercaseChange}
+                      />
+                    ) : (
+                      <TextInput
+                        type={field.type}
+                        name={field.name}
+                        value={values[field.name]}
+                        onChange={handleUppercaseChange}
+                      />
+                    )}
+                  </FormField>
+                ))}
               </Box>
-            </Box>
-
-            <Box className={styles.box} direction="row" gap="medium">
-              <Box basis="1/2" gap="small">
-                <FormField name="RCLine" label="Linha RC" required background="light-3" className={styles.formField} />
-                <FormField name="SAPCode" label="Código SAP" required background="light-3" className={styles.formField} />
-                <FormField name="RCValue" label="Valor RC" required background="light-3" className={styles.formField} />
-              </Box>
-              <Box basis="1/2" gap="small">
-                <FormField name="Order" label="Pedido" background="light-3" className={styles.formField} />
-                <FormField name="OrderValue" label="Valor Pedido" background="light-3" className={styles.formField} />
-                <FormField name="Requester" label="Solicitante" required background="light-3" className={styles.formField} />
+              <Box className={styles.column}>
+                {formFields.slice(Math.ceil(formFields.length / 2)).map((field, index) => (
+                  <FormField
+                    key={index}
+                    className={styles.formField}
+                    name={field.name}
+                    label={field.label}
+                    required={field.required}
+                    background="light-3"
+                    round="small"
+                    margin={{ vertical: 'xsmall' }}
+                  >
+                    {field.type === 'date' ? (
+                      <DateInput
+                        className={styles.formField}
+                        name={field.name}
+                        format="yyyy-mm-dd"
+                        calendarProps={{ range: false }}
+                        value={values[field.name]}
+                        onChange={handleUppercaseChange}
+                      />
+                    ) : (
+                      <TextInput
+                        type={field.type}
+                        name={field.name}
+                        value={values[field.name]}
+                        onChange={handleUppercaseChange}
+                      />
+                    )}
+                  </FormField>
+                ))}
               </Box>
             </Box>
 
