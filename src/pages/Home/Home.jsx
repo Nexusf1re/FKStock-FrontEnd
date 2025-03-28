@@ -4,8 +4,7 @@ import { grommet } from 'grommet/themes';
 import { SidebarTip as Sidebar } from '../../components/Sidebar/sidebar';
 import { useNavigate } from 'react-router-dom';
 import styles from './Home.module.css';
-import Username from '../../components/getUser';
-
+import Username from '../../components/getUsername';
 
 const Home = () => {
     const [items, setItems] = useState([]);
@@ -44,9 +43,7 @@ const Home = () => {
                 <Box pad="medium" background="light-2" fill>
                     <Heading level="2" margin="-17px 0px 0px 4px" color="#3c6aaf">
                         Dados
-                         <Username />
-                     
-                    
+                        <Username />
                     </Heading>
                     <Card background="white" margin={{ top: 'small' }} elevation="small" round="small" fill>
                         <CardHeader pad="medium" background="#3c6aaf">

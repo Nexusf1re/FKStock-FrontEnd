@@ -35,27 +35,3 @@ app.whenReady().then(() => {
 ipcMain.handle("get-user", () => {
   return os.userInfo().username;
 });
-
-// Obter e-mail (ou nome completo) do usuário logado usando o comando 'wmic'
-ipcMain.handle("get-user-email", async () => {
-  return new Promise((resolve, reject) => {
-    exec("wmic useraccount where name='%username%' get fullName", (error, stdout, stderr) => {
-      if (error || stderr) {
-        console.error("Erro ao executar o comando 'wmic':", error || stderr);
-        reject("Erro ao obter e-mail");
-      } else {
-        console.log("Saída do comando 'wmic':", stdout); // Log para debug
-        const result = stdout.trim().split("\n");
-
-        if (result.length > 1) {
-          const userName = result[1].trim(); // Nome completo do usuário
-          console.log("Nome do usuário:", userName);
-          resolve(userName);
-        } else {
-          console.error("Resultado inesperado:", stdout);
-          reject("Nome do usuário não encontrado");
-        }
-      }
-    });
-  });
-});

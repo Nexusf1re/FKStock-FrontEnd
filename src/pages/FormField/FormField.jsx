@@ -44,109 +44,68 @@ const MyForm = () => {
         <Box pad="medium" fill>
           <Heading level="2" color="#3c6aaf">Lançamento de RC</Heading>
           <Form
-            value={values}
-            onChange={(nextValue) => {
-              // If Recebimento ends up as an array, use the first item
-              if (Array.isArray(nextValue.Recebimento)) {
-                nextValue.Recebimento = nextValue.Recebimento[0];
-              }
-              // Convert "2025-03-13T03:00:00.000Z" to just "2025-03-13"
-              if (typeof nextValue.Recebimento === 'string') {
-                nextValue.Recebimento = nextValue.Recebimento.split('T')[0];
-              }
-              handleChange(nextValue);
-            }}
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <Box direction="row" gap="medium">
-              <Box basis="1/2" gap="small">
-                <FormField
-                  name="RC"
-                  label="RC"
-                  required
-                  background="light-1"
-                  round="small"
-                  margin={{ vertical: 'small' }}
-                >
-                  <TextInput type="number" name="RC" />
-                </FormField>
-                <FormField
-                  name="Material"
-                  label="Material"
-                  required
-                  background="light-1"
-                  round="small"
-                  margin={{ vertical: 'small' }}
-                >
-                  <TextInput name="Material" />
-                </FormField>
-                <FormField
-                  name="Marca"
-                  label="Marca"
-                  required
-                  background="light-1"
-                  round="small"
-                  margin={{ vertical: 'small' }}
-                >
-                  <TextInput name="Marca" />
-                </FormField>
-                <FormField
-                  name="Un"
-                  label="Un"
-                  required
-                  background="light-1"
-                  round="small"
-                  margin={{ vertical: 'small' }}
-                >
-                  <TextInput name="Un" />
-                </FormField>
-              </Box>
-              <Box basis="1/2" gap="small">
-                <FormField
-                  name="Valor"
-                  label="Valor"
-                  required
-                  background="light-1"
-                  round="small"
-                  margin={{ vertical: 'small' }}
-                >
-                  <TextInput type="number" name="Valor" />
-                </FormField>
-                <FormField
-                  name="Quantidade"
-                  label="Quantidade"
-                  required
-                  background="light-1"
-                  round="small"
-                  margin={{ vertical: 'small' }}
-                >
-                  <TextInput type="number" name="Quantidade" />
-                </FormField>
-                <FormField
-                  name="Valor_NF"
-                  label="Valor NF"
-                  required
-                  background="light-1"
-                  round="small"
-                  margin={{ vertical: 'small' }}
-                >
-                  <TextInput type="number" name="Valor_NF" />
-                </FormField>
-                <FormField
-                  name="Recebimento"
-                  label="Recebimento"
-                  required
-                  background="light-1"
-                  round="small"
-                  margin={{ vertical: 'small' }}
-                >
-                  <DateInput
-                    name="Recebimento"
-                    format="yyyy-mm-dd"
-                    calendarProps={{ range: false }}
-                  />
-                </FormField>
-              </Box>
+  className={styles.form}
+  value={values}
+  onChange={(nextValue) => {
+    // Convert all fields to uppercase
+    const upperCasedValues = Object.keys(nextValue).reduce((acc, key) => {
+      acc[key] = typeof nextValue[key] === 'string' ? nextValue[key].toUpperCase() : nextValue[key];
+      return acc;
+    }, {});
+
+    // If Recebimento ends up as an array, use the first item
+    if (Array.isArray(upperCasedValues.ShipmentDate)) {
+      upperCasedValues.ShipmentDate = upperCasedValues.ShipmentDate[0];
+    }
+    // Convert "2025-03-13T03:00:00.000Z" to just "2025-03-13"
+    if (typeof upperCasedValues.ShipmentDate === 'string') {
+      upperCasedValues.ShipmentDate = upperCasedValues.ShipmentDate.split('T')[0];
+    }
+
+    handleChange(upperCasedValues);
+  }}
+  onSubmit={handleSubmit(onSubmit)}
+>
+
+            <Box direction="row" gap="medium" wrap>
+              <FormField name="RC" label="RC" required>
+                <TextInput name="RC" value={values.RC} onChange={(e) => handleChange({ ...values, RC: e.target.value })} />
+              </FormField>
+              <FormField name="RCLine" label="Linha RC" required>
+                <TextInput name="RCLine" value={values.RCLine} onChange={(e) => handleChange({ ...values, RCLine: e.target.value })} />
+              </FormField>
+              <FormField name="SAPCode" label="Código SAP" required>
+                <TextInput name="SAPCode" value={values.SAPCode} onChange={(e) => handleChange({ ...values, SAPCode: e.target.value })} />
+              </FormField>
+              <FormField name="RCValue" label="Valor RC" required>
+                <TextInput name="RCValue" type="number" value={values.RCValue} onChange={(e) => handleChange({ ...values, RCValue: e.target.value })} />
+              </FormField>
+              <FormField name="Material" label="Material" required>
+                <TextInput name="Material" value={values.Material} onChange={(e) => handleChange({ ...values, Material: e.target.value })} />
+              </FormField>
+              <FormField name="Order" label="Pedido">
+                <TextInput name="Order" value={values.Order} onChange={(e) => handleChange({ ...values, Order: e.target.value })} />
+              </FormField>
+              <FormField name="OrderValue" label="Valor Pedido">
+                <TextInput name="OrderValue" type="number" value={values.OrderValue} onChange={(e) => handleChange({ ...values, OrderValue: e.target.value })} />
+              </FormField>
+              <FormField name="Un" label="Unidade" required>
+                <TextInput name="Un" value={values.Un} onChange={(e) => handleChange({ ...values, Un: e.target.value })} />
+              </FormField>
+              <FormField name="Quantity" label="Quantidade" required>
+                <TextInput name="Quantity" type="number" value={values.Quantity} onChange={(e) => handleChange({ ...values, Quantity: e.target.value })} />
+              </FormField>
+              <FormField name="Requester" label="Solicitante" required>
+                <TextInput name="Requester" value={values.Requester} onChange={(e) => handleChange({ ...values, Requester: e.target.value })} />
+              </FormField>
+              <FormField name="ShipmentDate" label="Data de Remessa" required>
+              <DateInput
+                    className={styles.formField}
+                    name="ShipmentDate"
+                    format="dd-mm-yyyy"
+                    calendarProps={{ locale: 'pt-BR', range: false }}
+                    />
+              </FormField>
             </Box>
             <Box margin={{ top: 'medium' }}>
               <Button
