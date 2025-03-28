@@ -27,7 +27,8 @@
     "build": "react-app-rewired build",
     "dist": "electron-builder",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "package": "electron-packager . FK-Stock --platform=win32 --arch=x64 --out=release --overwrite"
   },
   "eslintConfig": {
     "extends": [
@@ -50,6 +51,8 @@
   "devDependencies": {
     "electron": "^35.0.1",
     "electron-builder": "^25.1.8",
+    "electron-packager": "^17.1.2",
+    "electron-winstaller": "^5.4.0",
     "react-app-rewired": "^2.2.1"
   },
   "build": {
