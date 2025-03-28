@@ -51,7 +51,7 @@ const Home = () => {
         { property: 'Un', header: 'Unidade' },
         { property: 'Quantity', header: 'Quantidade' },
         { property: 'Requester', header: 'Solicitante' },
-        { property: 'ReceiptDate', header: 'Data de Recebimento' },
+        { property: 'ShipmentDate', header: 'Data Remessa' },
     ];
 
     const handleRowClick = (event) => {

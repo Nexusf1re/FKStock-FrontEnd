@@ -4,6 +4,7 @@ import { Grommet, Box, Heading, Form, FormField, Button, Layer, Text, DateInput 
 import { grommet } from 'grommet/themes';
 import { SidebarTip as Sidebar } from '../../components/Sidebar/sidebar';
 import { fetchItemById, updateItem, deleteItem } from '../../services/editService';
+import { formatDateToBackend, formatDateToFrontend } from '../../utils/dateUtils';
 
 const EditItem = () => {
     const { id } = useParams();
@@ -17,7 +18,7 @@ const EditItem = () => {
         OrderValue: '',
         Un: '',
         Quantity: '',
-        ReceiptDate: '',
+        ShipmentDate: '',
         Requester: ''
     });
     const [showConfirm, setShowConfirm] = useState(false);
@@ -28,17 +29,8 @@ const EditItem = () => {
             try {
                 const data = await fetchItemById(id);
                 setItem({
-                    RC: data.RC || '',
-                    RCLine: data.RCLine || '',
-                    SAPCode: data.SAPCode || '',
-                    RCValue: data.RCValue || '',
-                    Material: data.Material || '',
-                    Order: data.Order || '',
-                    OrderValue: data.OrderValue || '',
-                    Un: data.Un || '',
-                    Quantity: data.Quantity || '',
-                    ReceiptDate: data.ReceiptDate || '',
-                    Requester: data.Requester || ''
+                    ...data,
+                    ShipmentDate: formatDateToFrontend(data.ShipmentDate)
                 });
             } catch (error) {
                 console.error(error);
@@ -49,7 +41,13 @@ const EditItem = () => {
 
     const handleSubmit = async () => {
         try {
-            await updateItem(id, item);
+            const formattedData = {
+                ...item,
+                ShipmentDate: item.ShipmentDate
+                    ? formatDateToBackend(item.ShipmentDate) // Formata para o backend
+                    : null // Envia null se a data estiver vazia
+            };
+            await updateItem(id, formattedData);
             navigate('/');
         } catch (error) {
             console.error('Error updating item:', error);
@@ -77,10 +75,8 @@ const EditItem = () => {
                     </Heading>
                     <Form
                         value={item}
-                        onChange={(nextValue) => {
-                            setItem(nextValue);
-                        }}
-                        onSubmit={({ value }) => handleSubmit(value)}
+                        onChange={(nextValue) => setItem(nextValue)}
+                        onSubmit={handleSubmit}
                     >
                         <Box direction="row" gap="medium" wrap>
                             <FormField name="RC" label="RC" required />
@@ -93,12 +89,20 @@ const EditItem = () => {
                             <FormField name="Un" label="Unidade" required />
                             <FormField name="Quantity" label="Quantidade" required />
                             <FormField name="Requester" label="Solicitante" required />
-                            <FormField name="ReceiptDate" label="Data de Recebimento" required>
+                            <FormField name="ShipmentDate" label="Data de Remessa" required>
                                 <DateInput
-                                    name="ReceiptDate"
-                                    format="yyyy-mm-dd"
+                                    name="ShipmentDate"
+                                    format="yyyy-MM-dd" // Use o formato ISO para consistência
                                     calendarProps={{ range: false }}
-                                    value={item.ReceiptDate}
+                                    value={item.ShipmentDate || ''} // Garante que o valor seja uma string
+                                    onChange={({ value }) => {
+                                        if (value) {
+                                            const formattedDate = formatDateToFrontend(value); // Formata para dd-MM-yyyy
+                                            setItem({ ...item, ShipmentDate: formattedDate });
+                                        } else {
+                                            setItem({ ...item, ShipmentDate: null }); // Define como null se estiver vazio
+                                        }
+                                    }}
                                 />
                             </FormField>
                         </Box>

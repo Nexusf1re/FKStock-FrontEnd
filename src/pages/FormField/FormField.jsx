@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Grommet, Box, Heading, Form, FormField, TextInput, DateInput } from 'grommet';
+import { Grommet, Box, Heading, Form, FormField, TextInput, DateInput, Button } from 'grommet';
 import { grommet } from 'grommet/themes';
 import { SidebarTip } from '../../components/Sidebar/sidebar';
 import useForm from '../../hooks/useForm';
 import { submitForm } from '../../services/formService';
+import { formatDateToBackend, formatDateToFrontend } from '../../utils/dateUtils';
 import styles from './FormField.module.css';
 
 const MyForm = () => {
@@ -18,49 +19,29 @@ const MyForm = () => {
     OrderValue: '',
     Un: '',
     Quantity: '',
-    ReceiptDate: '',
+    ShipmentDate: '',
     Requester: ''
   });
 
-  const handleUppercaseChange = (event) => {
-    const { name, value } = event.target;
-    handleChange({ ...values, [name]: value.toUpperCase() });
-  };
-
   const onSubmit = async (formData) => {
     setIsSubmitting(true);
-    await submitForm(formData);
 
-    handleChange({
-      RC: '',
-      Material: '',
-      Marca: '',
-      Un: '',
-      Valor: '',
-      Quantidade: '',
-      Valor_NF: '',
-      Recebimento: ''
-    });
+    // Verificar e formatar a data antes de enviar ao backend
+    const formattedData = {
+      ...formData,
+      ShipmentDate: formData.ShipmentDate
+        ? formatDateToBackend(formData.ShipmentDate) // Formata para yyyy-MM-dd
+        : null // Envia null se a data estiver vazia
+    };
 
-    setIsSubmitting(false);
+    try {
+      await submitForm(formattedData);
+    } catch (error) {
+      console.error('Error creating item:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
-
-  const formFields = [
-    { name: 'RC', label: 'RC', type: 'number', required: true },
-    { name: 'Material', label: 'Material', type: 'text', required: true },
-    { name: 'Un', label: 'Unidade', type: 'text', required: true },
-    { name: 'Quantidade', label: 'Quantidade', type: 'number', required: true },
-    { name: 'Valor', label: 'Valor RC', type: 'number', required: true },
-    { name: 'Valor_NF', label: 'Valor NF', type: 'number', required: true },
-    { name: 'Marca', label: 'Marca', type: 'text', required: true },
-    { name: 'Recebimento', label: 'Recebimento', type: 'date', required: true },
-    { name: 'RCLine', label: 'Linha RC', type: 'text', required: true },
-    { name: 'SAPCode', label: 'Código SAP', type: 'text', required: true },
-    { name: 'RCValue', label: 'Valor RC', type: 'number', required: true },
-    { name: 'Order', label: 'Pedido', type: 'text', required: false },
-    { name: 'OrderValue', label: 'Valor Pedido', type: 'number', required: false },
-    { name: 'Requester', label: 'Solicitante', type: 'text', required: true }
-  ];
 
   return (
     <Grommet theme={grommet} full>
@@ -71,91 +52,65 @@ const MyForm = () => {
           <Form
             className={styles.form}
             value={values}
-            onChange={(nextValue) => {
-              if (Array.isArray(nextValue.Recebimento)) {
-                nextValue.Recebimento = nextValue.Recebimento[0];
-              }
-              if (typeof nextValue.Recebimento === 'string') {
-                nextValue.Recebimento = nextValue.Recebimento.split('T')[0];
-              }
-              handleChange(nextValue);
-            }}
+            onChange={(nextValue) => handleChange(nextValue)}
             onSubmit={handleSubmit(onSubmit)}
           >
-            <Box className={styles.box}>
-              <Box className={styles.column}>
-                {formFields.slice(0, Math.ceil(formFields.length / 2)).map((field, index) => (
-                  <FormField
-                    key={index}
-                    className={styles.formField}
-                    name={field.name}
-                    label={field.label}
-                    required={field.required}
-                    background="light-3"
-                    round="small"
-                    margin={{ vertical: 'xsmall' }}
-                  >
-                    {field.type === 'date' ? (
-                      <DateInput
-                        className={styles.formField}
-                        name={field.name}
-                        format="yyyy-mm-dd"
-                        calendarProps={{ range: false }}
-                        value={values[field.name]}
-                        onChange={handleUppercaseChange}
-                      />
-                    ) : (
-                      <TextInput
-                        type={field.type}
-                        name={field.name}
-                        value={values[field.name]}
-                        onChange={handleUppercaseChange}
-                      />
-                    )}
-                  </FormField>
-                ))}
-              </Box>
-              <Box className={styles.column}>
-                {formFields.slice(Math.ceil(formFields.length / 2)).map((field, index) => (
-                  <FormField
-                    key={index}
-                    className={styles.formField}
-                    name={field.name}
-                    label={field.label}
-                    required={field.required}
-                    background="light-3"
-                    round="small"
-                    margin={{ vertical: 'xsmall' }}
-                  >
-                    {field.type === 'date' ? (
-                      <DateInput
-                        className={styles.formField}
-                        name={field.name}
-                        format="yyyy-mm-dd"
-                        calendarProps={{ range: false }}
-                        value={values[field.name]}
-                        onChange={handleUppercaseChange}
-                      />
-                    ) : (
-                      <TextInput
-                        type={field.type}
-                        name={field.name}
-                        value={values[field.name]}
-                        onChange={handleUppercaseChange}
-                      />
-                    )}
-                  </FormField>
-                ))}
-              </Box>
+            <Box direction="row" gap="medium" wrap>
+              <FormField name="RC" label="RC" required>
+                <TextInput name="RC" value={values.RC} onChange={(e) => handleChange({ ...values, RC: e.target.value })} />
+              </FormField>
+              <FormField name="RCLine" label="Linha RC" required>
+                <TextInput name="RCLine" value={values.RCLine} onChange={(e) => handleChange({ ...values, RCLine: e.target.value })} />
+              </FormField>
+              <FormField name="SAPCode" label="Código SAP" required>
+                <TextInput name="SAPCode" value={values.SAPCode} onChange={(e) => handleChange({ ...values, SAPCode: e.target.value })} />
+              </FormField>
+              <FormField name="RCValue" label="Valor RC" required>
+                <TextInput name="RCValue" type="number" value={values.RCValue} onChange={(e) => handleChange({ ...values, RCValue: e.target.value })} />
+              </FormField>
+              <FormField name="Material" label="Material" required>
+                <TextInput name="Material" value={values.Material} onChange={(e) => handleChange({ ...values, Material: e.target.value })} />
+              </FormField>
+              <FormField name="Order" label="Pedido">
+                <TextInput name="Order" value={values.Order} onChange={(e) => handleChange({ ...values, Order: e.target.value })} />
+              </FormField>
+              <FormField name="OrderValue" label="Valor Pedido">
+                <TextInput name="OrderValue" type="number" value={values.OrderValue} onChange={(e) => handleChange({ ...values, OrderValue: e.target.value })} />
+              </FormField>
+              <FormField name="Un" label="Unidade" required>
+                <TextInput name="Un" value={values.Un} onChange={(e) => handleChange({ ...values, Un: e.target.value })} />
+              </FormField>
+              <FormField name="Quantity" label="Quantidade" required>
+                <TextInput name="Quantity" type="number" value={values.Quantity} onChange={(e) => handleChange({ ...values, Quantity: e.target.value })} />
+              </FormField>
+              <FormField name="Requester" label="Solicitante" required>
+                <TextInput name="Requester" value={values.Requester} onChange={(e) => handleChange({ ...values, Requester: e.target.value })} />
+              </FormField>
+              <FormField name="ShipmentDate" label="Data de Remessa" required>
+                <DateInput
+                  name="ShipmentDate"
+                  format="dd-mm-yyyy"
+                  calendarProps={{ range: false }}
+                  value={values.ShipmentDate}
+                  onChange={(e) => {
+                    const rawDate = e.value; // Valor retornado pelo DateInput
+                    if (rawDate) {
+                      const formattedDate = formatDateToFrontend(rawDate); // Formata para dd-mm-yyyy
+                      handleChange({ ...values, ShipmentDate: rawDate }); // Atualiza o estado com o valor bruto
+                    }
+                  }}
+                />
+              </FormField>
             </Box>
-
-            <button
-              className={styles.button}
-              type="submit"
-              primary
-              disabled={isSubmitting}>
-              Salvar
-            </button>
+            <Box direction="row" gap="medium" margin={{ top: 'medium' }}>
+              <Button
+                className={styles.button}
+                type="submit"
+                primary
+                label="Salvar"
+                disabled={isSubmitting}
+              />
+            </Box>
           </Form>
         </Box>
       </Box>
