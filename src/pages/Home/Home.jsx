@@ -10,12 +10,26 @@ const Home = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_API_URL}/api/items`)
-            .then((res) => res.json())
-            .then((data) => {
-                setItems(data);
-            })
-            .catch((err) => console.error(err));
+        const fetchItems = async () => {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/items`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    setItems(data); // Certifique-se de que `data` é um array
+                } else {
+                    console.error('API response is not an array:', data);
+                    setItems([]); // Evita passar um objeto para o DataTable
+                }
+            } catch (error) {
+                console.error('Error fetching items:', error);
+                setItems([]); // Evita erros no DataTable
+            }
+        };
+    
+        fetchItems();
     }, []);
 
     const formatCurrency = (value) => {
@@ -28,21 +42,16 @@ const Home = () => {
     const columns = [
         { property: 'Id', header: 'Id' },
         { property: 'RC', header: 'RC', primary: true, search: true },
+        { property: 'RCLine', header: 'Linha RC' },
+        { property: 'SAPCode', header: 'Código SAP' },
+        { property: 'RCValue', header: 'Valor RC', render: (datum) => formatCurrency(datum.RCValue) },
         { property: 'Material', header: 'Material', search: true },
-        { property: 'Quantidade', header: 'Qtd' },
-        { property: 'Un', header: 'Un' },
-        { 
-            property: 'Valor', 
-            header: 'Valor RC', 
-            render: (datum) => formatCurrency(datum.Valor) 
-        },
-        { 
-            property: 'Valor_NF', 
-            header: 'Valor NF', 
-            render: (datum) => formatCurrency(datum.Valor_NF) 
-        },
-        { property: 'Marca', header: 'Marca' },
-        { property: 'Recebimento', header: 'Recebimento' },
+        { property: 'Order', header: 'Pedido' },
+        { property: 'OrderValue', header: 'Valor Pedido', render: (datum) => formatCurrency(datum.OrderValue) },
+        { property: 'Un', header: 'Unidade' },
+        { property: 'Quantity', header: 'Quantidade' },
+        { property: 'Requester', header: 'Solicitante' },
+        { property: 'ReceiptDate', header: 'Data de Recebimento' },
     ];
 
     const handleRowClick = (event) => {

@@ -10,13 +10,16 @@ const MyForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { values, handleChange, handleSubmit } = useForm({
     RC: '',
+    RCLine: '',
+    SAPCode: '',
+    RCValue: '',
     Material: '',
-    Marca: '',
+    Order: '',
+    OrderValue: '',
     Un: '',
-    Valor: '',
-    Quantidade: '',
-    Valor_NF: '',
-    Recebimento: ''
+    Quantity: '',
+    ReceiptDate: '',
+    Requester: ''
   });
 
   const handleUppercaseChange = (event) => {
@@ -195,6 +198,19 @@ const MyForm = () => {
                     onChange={handleUppercaseChange}
                   />
                 </FormField>
+              </Box>
+            </Box>
+
+            <Box className={styles.box} direction="row" gap="medium">
+              <Box basis="1/2" gap="small">
+                <FormField name="RCLine" label="Linha RC" required background="light-3" className={styles.formField} />
+                <FormField name="SAPCode" label="Código SAP" required background="light-3" className={styles.formField} />
+                <FormField name="RCValue" label="Valor RC" required background="light-3" className={styles.formField} />
+              </Box>
+              <Box basis="1/2" gap="small">
+                <FormField name="Order" label="Pedido" background="light-3" className={styles.formField} />
+                <FormField name="OrderValue" label="Valor Pedido" background="light-3" className={styles.formField} />
+                <FormField name="Requester" label="Solicitante" required background="light-3" className={styles.formField} />
               </Box>
             </Box>
 

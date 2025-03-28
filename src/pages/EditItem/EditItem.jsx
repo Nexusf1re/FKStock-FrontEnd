@@ -9,13 +9,16 @@ const EditItem = () => {
     const { id } = useParams();
     const [item, setItem] = useState({
         RC: '',
+        RCLine: '',
+        SAPCode: '',
+        RCValue: '',
         Material: '',
-        Quantidade: '',
-        Valor: '',
-        Valor_NF: '',
+        Order: '',
+        OrderValue: '',
         Un: '',
-        Marca: '',
-        Recebimento: ''
+        Quantity: '',
+        ReceiptDate: '',
+        Requester: ''
     });
     const [showConfirm, setShowConfirm] = useState(false);
     const navigate = useNavigate();
@@ -26,13 +29,16 @@ const EditItem = () => {
                 const data = await fetchItemById(id);
                 setItem({
                     RC: data.RC || '',
+                    RCLine: data.RCLine || '',
+                    SAPCode: data.SAPCode || '',
+                    RCValue: data.RCValue || '',
                     Material: data.Material || '',
-                    Quantidade: data.Quantidade || '',
-                    Valor: data.Valor || '',
-                    Valor_NF: data.Valor_NF || '',
+                    Order: data.Order || '',
+                    OrderValue: data.OrderValue || '',
                     Un: data.Un || '',
-                    Marca: data.Marca || '',
-                    Recebimento: data.Recebimento || ''
+                    Quantity: data.Quantity || '',
+                    ReceiptDate: data.ReceiptDate || '',
+                    Requester: data.Requester || ''
                 });
             } catch (error) {
                 console.error(error);
@@ -72,41 +78,27 @@ const EditItem = () => {
                     <Form
                         value={item}
                         onChange={(nextValue) => {
-                            // Convert all string fields to uppercase
-                            const uppercasedValue = Object.fromEntries(
-                                Object.entries(nextValue).map(([key, value]) => [
-                                    key,
-                                    typeof value === 'string' ? value.toUpperCase() : value,
-                                ])
-                            );
-
-                            // If Recebimento ends up as an array, use the first item
-                            if (Array.isArray(uppercasedValue.Recebimento)) {
-                                uppercasedValue.Recebimento = uppercasedValue.Recebimento[0];
-                            }
-                            // Convert "2025-03-13T03:00:00.000Z" to just "2025-03-13"
-                            if (typeof uppercasedValue.Recebimento === 'string') {
-                                uppercasedValue.Recebimento = uppercasedValue.Recebimento.split('T')[0];
-                            }
-
-                            setItem(uppercasedValue);
+                            setItem(nextValue);
                         }}
                         onSubmit={({ value }) => handleSubmit(value)}
                     >
                         <Box direction="row" gap="medium" wrap>
                             <FormField name="RC" label="RC" required />
+                            <FormField name="RCLine" label="Linha RC" required />
+                            <FormField name="SAPCode" label="Código SAP" required />
+                            <FormField name="RCValue" label="Valor RC" required />
                             <FormField name="Material" label="Material" required />
-                            <FormField name="Quantidade" label="Quantidade" />
-                            <FormField name="Valor" label="Valor" required />
-                            <FormField name="Valor_NF" label="Valor NF" />
-                            <FormField name="Un" label="Un" required />
-                            <FormField name="Marca" label="Marca" required />
-                            <FormField name="Recebimento" label="Recebimento" required>
+                            <FormField name="Order" label="Pedido" />
+                            <FormField name="OrderValue" label="Valor Pedido" />
+                            <FormField name="Un" label="Unidade" required />
+                            <FormField name="Quantity" label="Quantidade" required />
+                            <FormField name="Requester" label="Solicitante" required />
+                            <FormField name="ReceiptDate" label="Data de Recebimento" required>
                                 <DateInput
-                                    name="Recebimento"
+                                    name="ReceiptDate"
                                     format="yyyy-mm-dd"
                                     calendarProps={{ range: false }}
-                                    value={item.Recebimento}
+                                    value={item.ReceiptDate}
                                 />
                             </FormField>
                         </Box>
