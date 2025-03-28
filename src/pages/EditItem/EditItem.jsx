@@ -4,7 +4,6 @@ import { Grommet, Box, Heading, Form, FormField, Button, Layer, Text, DateInput 
 import { grommet } from 'grommet/themes';
 import { SidebarTip as Sidebar } from '../../components/Sidebar/sidebar';
 import { fetchItemById, updateItem, deleteItem } from '../../services/editService';
-import { formatDateToBackend } from '../../utils/dateUtils';
 
 const EditItem = () => {
     const { id } = useParams();
