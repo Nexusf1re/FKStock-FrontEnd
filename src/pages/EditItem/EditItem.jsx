@@ -4,7 +4,7 @@ import { Grommet, Box, Heading, Form, FormField, Button, Layer, Text, DateInput 
 import { grommet } from 'grommet/themes';
 import { SidebarTip as Sidebar } from '../../components/Sidebar/sidebar';
 import { fetchItemById, updateItem, deleteItem } from '../../services/editService';
-import { formatDateToBackend, formatDateToFrontend } from '../../utils/dateUtils';
+import { formatDateToBackend } from '../../utils/dateUtils';
 
 const EditItem = () => {
     const { id } = useParams();
@@ -30,7 +30,7 @@ const EditItem = () => {
                 const data = await fetchItemById(id);
                 setItem({
                     ...data,
-                    ShipmentDate: formatDateToFrontend(data.ShipmentDate)
+                    ShipmentDate: data.ShipmentDate
                 });
             } catch (error) {
                 console.error(error);
@@ -40,14 +40,16 @@ const EditItem = () => {
     }, [id]);
 
     const handleSubmit = async () => {
+        const formattedItem = {
+            ...item,
+            ShipmentDate: item.ShipmentDate && item.ShipmentDate !== ''
+                ? formatDateToBackend(item.ShipmentDate) // Formata para yyyy-MM-dd
+                : null // Envia null se estiver vazio ou inválido
+        };
+
         try {
-            const formattedData = {
-                ...item,
-                ShipmentDate: item.ShipmentDate
-                    ? formatDateToBackend(item.ShipmentDate) // Formata para o backend
-                    : null // Envia null se a data estiver vazia
-            };
-            await updateItem(id, formattedData);
+            await updateItem(id, formattedItem); // Envia o item formatado
+            console.log('Item updated successfully:', formattedItem);
             navigate('/');
         } catch (error) {
             console.error('Error updating item:', error);
@@ -92,17 +94,8 @@ const EditItem = () => {
                             <FormField name="ShipmentDate" label="Data de Remessa" required>
                                 <DateInput
                                     name="ShipmentDate"
-                                    format="yyyy-MM-dd" // Use o formato ISO para consistência
-                                    calendarProps={{ range: false }}
-                                    value={item.ShipmentDate || ''} // Garante que o valor seja uma string
-                                    onChange={({ value }) => {
-                                        if (value) {
-                                            const formattedDate = formatDateToFrontend(value); // Formata para dd-MM-yyyy
-                                            setItem({ ...item, ShipmentDate: formattedDate });
-                                        } else {
-                                            setItem({ ...item, ShipmentDate: null }); // Define como null se estiver vazio
-                                        }
-                                    }}
+                                    format="dd-mm-yyyy"
+                                    calendarProps={{ locale: 'pt-BR', range: false }}
                                 />
                             </FormField>
                         </Box>

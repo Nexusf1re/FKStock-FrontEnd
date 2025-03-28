@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Grommet, Box, Heading, Form, FormField, TextInput, DateInput, Button } from 'grommet';
 import { grommet } from 'grommet/themes';
+import { useNavigate } from 'react-router-dom';
 import { SidebarTip } from '../../components/Sidebar/sidebar';
 import useForm from '../../hooks/useForm';
 import { submitForm } from '../../services/formService';
-import { formatDateToBackend, formatDateToFrontend } from '../../utils/dateUtils';
+import { formatDateToBackend } from '../../utils/dateUtils';
 import styles from './FormField.module.css';
 
 const MyForm = () => {
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { values, handleChange, handleSubmit } = useForm({
     RC: '',
@@ -31,11 +33,12 @@ const MyForm = () => {
       ...formData,
       ShipmentDate: formData.ShipmentDate
         ? formatDateToBackend(formData.ShipmentDate) // Formata para yyyy-MM-dd
-        : null // Envia null se a data estiver vazia
+        : undefined // Exclui ShipmentDate se estiver vazio ou inválido
     };
 
     try {
       await submitForm(formattedData);
+      navigate('/');
     } catch (error) {
       console.error('Error creating item:', error);
     } finally {
@@ -52,7 +55,17 @@ const MyForm = () => {
           <Form
             className={styles.form}
             value={values}
-            onChange={(nextValue) => handleChange(nextValue)}
+            onChange={(nextValue) => {
+              // If Recebimento ends up as an array, use the first item
+              if (Array.isArray(nextValue.ShipmentDate)) {
+                nextValue.ShipmentDate = nextValue.ShipmentDate[0];
+              }
+              // Convert "2025-03-13T03:00:00.000Z" to just "2025-03-13"
+              if (typeof nextValue.ShipmentDate === 'string') {
+                nextValue.ShipmentDate = nextValue.ShipmentDate.split('T')[0];
+              }
+              handleChange(nextValue);
+            }}
             onSubmit={handleSubmit(onSubmit)}
           >
             <Box direction="row" gap="medium" wrap>
@@ -87,19 +100,12 @@ const MyForm = () => {
                 <TextInput name="Requester" value={values.Requester} onChange={(e) => handleChange({ ...values, Requester: e.target.value })} />
               </FormField>
               <FormField name="ShipmentDate" label="Data de Remessa" required>
-                <DateInput
-                  name="ShipmentDate"
-                  format="dd-mm-yyyy"
-                  calendarProps={{ range: false }}
-                  value={values.ShipmentDate}
-                  onChange={(e) => {
-                    const rawDate = e.value; // Valor retornado pelo DateInput
-                    if (rawDate) {
-                      const formattedDate = formatDateToFrontend(rawDate); // Formata para dd-mm-yyyy
-                      handleChange({ ...values, ShipmentDate: rawDate }); // Atualiza o estado com o valor bruto
-                    }
-                  }}
-                />
+              <DateInput
+                    className={styles.formField}
+                    name="ShipmentDate"
+                    format="dd-mm-yyyy"
+                    calendarProps={{ locale: 'pt-BR', range: false }}
+                    />
               </FormField>
             </Box>
             <Box direction="row" gap="medium" margin={{ top: 'medium' }}>
