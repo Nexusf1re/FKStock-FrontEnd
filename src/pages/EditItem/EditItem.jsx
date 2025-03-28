@@ -43,9 +43,10 @@ const EditItem = () => {
         const formattedItem = {
             ...item,
             ShipmentDate: item.ShipmentDate && item.ShipmentDate !== ''
-                ? formatDateToBackend(item.ShipmentDate) // Formata para yyyy-MM-dd
-                : null // Envia null se estiver vazio ou inválido
+            ? item.ShipmentDate  // Formata para yyyy-MM-dd
+            : null // Envia null se estiver vazio ou inválido
         };
+        console.log('Formatted item before submission:', formattedItem);
 
         try {
             await updateItem(id, formattedItem); // Envia o item formatado
@@ -92,12 +93,17 @@ const EditItem = () => {
                             <FormField name="Quantity" label="Quantidade" required />
                             <FormField name="Requester" label="Solicitante" required />
                             <FormField name="ShipmentDate" label="Data de Remessa" required>
-                                <DateInput
-                                    name="ShipmentDate"
-                                    format="dd-mm-yyyy"
-                                    calendarProps={{ locale: 'pt-BR', range: false }}
-                                />
-                            </FormField>
+                            <DateInput
+                                name="ShipmentDate"
+                                format="yyyy-mm-dd"
+                                calendarProps={{ locale: 'pt-BR' }}
+                                range={false} // Ensure single date selection
+                                onChange={({ value }) => {
+                                    const singleDate = Array.isArray(value) ? value[0] : value; // Ensure only a single date is used
+                                    setItem((prev) => ({ ...prev, ShipmentDate: singleDate }));
+                                }}
+                            />
+                        </FormField>
                         </Box>
                         <Box direction="row" gap="medium" margin={{ top: 'medium' }}>
                             <Button type="submit" primary label="Salvar" />
