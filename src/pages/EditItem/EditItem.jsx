@@ -3,73 +3,66 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Grommet, Box, Heading, Form, FormField, Button, Layer, Text, DateInput } from 'grommet';
 import { grommet } from 'grommet/themes';
 import { SidebarTip as Sidebar } from '../../components/Sidebar/sidebar';
+import { fetchItemById, updateItem, deleteItem } from '../../services/editService';
 
 const EditItem = () => {
     const { id } = useParams();
     const [item, setItem] = useState({
         RC: '',
+        RCLine: '',
+        SAPCode: '',
+        RCValue: '',
         Material: '',
-        Quantidade: '',
-        Valor: '',
-        Valor_NF: '',
+        Order: '',
+        OrderValue: '',
         Un: '',
-        Marca: '',
-        Recebimento: ''
+        Quantity: '',
+        ShipmentDate: '',
+        Requester: ''
     });
     const [showConfirm, setShowConfirm] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_API_URL}/api/items/${id}`)
-            .then((res) => res.json())
-            .then((data) => setItem({
-                RC: data.RC || '',
-                Material: data.Material || '',
-                Quantidade: data.Quantidade || '',
-                Valor: data.Valor || '',
-                Valor_NF: data.Valor_NF || '',
-                Un: data.Un || '',
-                Marca: data.Marca || '',
-                Recebimento: data.Recebimento ? new Date(data.Recebimento).toISOString().split('T')[0] : ''
-            }))
-            .catch((err) => console.error(err));
+        const loadItem = async () => {
+            try {
+                const data = await fetchItemById(id);
+                setItem({
+                    ...data,
+                    ShipmentDate: data.ShipmentDate
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        loadItem();
     }, [id]);
 
-    const handleSubmit = (updatedItem) => {
-        // Convert Recebimento to a date format that PostgreSQL can accept
+    const handleSubmit = async () => {
         const formattedItem = {
-            ...updatedItem,
-            Recebimento: updatedItem.Recebimento ? new Date(updatedItem.Recebimento).toISOString().split('T')[0] : null
+            ...item,
+            ShipmentDate: item.ShipmentDate && item.ShipmentDate !== ''
+            ? item.ShipmentDate  // Formata para yyyy-MM-dd
+            : null // Envia null se estiver vazio ou inválido
         };
+        console.log('Formatted item before submission:', formattedItem);
 
-        console.log('Updating item:', formattedItem); // Log para depuração
-        fetch(`${process.env.REACT_APP_API_URL}/api/items/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formattedItem),
-        })
-            .then((res) => {
-                if (res.ok) {
-                    console.log('Update successful');
-                    navigate('/');
-                } else {
-                    console.error('Update failed');
-                }
-            })
-            .catch((err) => console.error('Error:', err));
+        try {
+            await updateItem(id, formattedItem); // Envia o item formatado
+            console.log('Item updated successfully:', formattedItem);
+            navigate('/');
+        } catch (error) {
+            console.error('Error updating item:', error);
+        }
     };
 
-    const handleDelete = () => {
-        fetch(`${process.env.REACT_APP_API_URL}/api/items/${id}`, { method: 'DELETE' })
-            .then((res) => {
-                if (res.ok) {
-                    console.log('Delete successful');
-                    navigate('/');
-                } else {
-                    console.error('Delete failed');
-                }
-            })
-            .catch((err) => console.error('Error:', err));
+    const handleDelete = async () => {
+        try {
+            await deleteItem(id);
+            navigate('/');
+        } catch (error) {
+            console.error('Error deleting item:', error);
+        }
     };
 
     if (!item) return <div>Loading...</div>;
@@ -82,23 +75,34 @@ const EditItem = () => {
                     <Heading level="2" margin="none" color="#3c6aaf">
                         Editar Item
                     </Heading>
-                    <Form value={item} onChange={setItem} onSubmit={({ value }) => handleSubmit(value)}>
+                    <Form
+                        value={item}
+                        onChange={(nextValue) => setItem(nextValue)}
+                        onSubmit={handleSubmit}
+                    >
                         <Box direction="row" gap="medium" wrap>
                             <FormField name="RC" label="RC" required />
+                            <FormField name="RCLine" label="Linha RC" required />
+                            <FormField name="SAPCode" label="Código SAP" required />
+                            <FormField name="RCValue" label="Valor RC" required />
                             <FormField name="Material" label="Material" required />
-                            <FormField name="Quantidade" label="Quantidade" />
-                            <FormField name="Valor" label="Valor" required />
-                            <FormField name="Valor_NF" label="Valor NF" />
-                            <FormField name="Un" label="Un" required />
-                            <FormField name="Marca" label="Marca" required />
-                            <FormField name="Recebimento" label="Recebimento" required>
-                                <DateInput
-                                    format="dd-mm-yyyy"
-                                    name="Recebimento"
-                                    value={item.Recebimento}
-                                    onChange={({ value }) => setItem({ ...item, Recebimento: value })}
-                                />
-                            </FormField>
+                            <FormField name="Order" label="Pedido" />
+                            <FormField name="OrderValue" label="Valor Pedido" />
+                            <FormField name="Un" label="Unidade" required />
+                            <FormField name="Quantity" label="Quantidade" required />
+                            <FormField name="Requester" label="Solicitante" required />
+                            <FormField name="ShipmentDate" label="Data de Remessa" required>
+                            <DateInput
+                                name="ShipmentDate"
+                                format="yyyy-mm-dd"
+                                calendarProps={{ locale: 'pt-BR' }}
+                                range={false} // Ensure single date selection
+                                onChange={({ value }) => {
+                                    const singleDate = Array.isArray(value) ? value[0] : value; // Ensure only a single date is used
+                                    setItem((prev) => ({ ...prev, ShipmentDate: singleDate }));
+                                }}
+                            />
+                        </FormField>
                         </Box>
                         <Box direction="row" gap="medium" margin={{ top: 'medium' }}>
                             <Button type="submit" primary label="Salvar" />
