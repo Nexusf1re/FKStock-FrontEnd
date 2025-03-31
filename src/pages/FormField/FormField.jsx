@@ -1,73 +1,73 @@
 import React, { useState } from 'react';
-import { Grommet, Box, Heading, Form, FormField, TextInput, Button, DateInput } from 'grommet';
+import { Grommet, Box, Heading, Form, FormField, TextInput, DateInput, Button } from 'grommet';
 import { grommet } from 'grommet/themes';
+import { useNavigate } from 'react-router-dom';
 import { SidebarTip } from '../../components/Sidebar/sidebar';
 import useForm from '../../hooks/useForm';
 import { submitForm } from '../../services/formService';
+import { formatDateToBackend } from '../../utils/dateUtils';
 import styles from './FormField.module.css';
 
 const MyForm = () => {
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { values, handleChange, handleSubmit } = useForm({
     RC: '',
+    RCLine: '',
+    SAPCode: '',
+    RCValue: '',
     Material: '',
-    Marca: '',
+    Order: '',
+    OrderValue: '',
     Un: '',
-    Valor: '',
-    Quantidade: '',
-    Valor_NF: '',
-    Recebimento: ''
+    Quantity: '',
+    ShipmentDate: '',
+    Requester: ''
   });
 
   const onSubmit = async (formData) => {
     setIsSubmitting(true);
-    await submitForm(formData);
 
-    // Limpar os campos após envio
-    handleChange({
-      RC: '',
-      Material: '',
-      Marca: '',
-      Un: '',
-      Valor: '',
-      Quantidade: '',
-      Valor_NF: '',
-      Recebimento: ''
-    });
+    // Verificar e formatar a data antes de enviar ao backend
+    const formattedData = {
+      ...formData,
+      ShipmentDate: formData.ShipmentDate
+        ? formatDateToBackend(formData.ShipmentDate) // Formata para yyyy-MM-dd
+        : undefined // Exclui ShipmentDate se estiver vazio ou inválido
+    };
 
-    setIsSubmitting(false);
+    try {
+      await submitForm(formattedData);
+      navigate('/');
+    } catch (error) {
+      console.error('Error creating item:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <Grommet theme={grommet} full>
       <Box direction="row" fill>
         <SidebarTip />
-        <Box pad="medium" fill>
-          <Heading level="2" color="#3c6aaf">Lançamento de RC</Heading>
+        <Box pad="small" fill>
+          <Heading className={styles.heading} level="2" color="#3c6aaf">Lançamento de RC</Heading>
           <Form
-  className={styles.form}
-  value={values}
-  onChange={(nextValue) => {
-    // Convert all fields to uppercase
-    const upperCasedValues = Object.keys(nextValue).reduce((acc, key) => {
-      acc[key] = typeof nextValue[key] === 'string' ? nextValue[key].toUpperCase() : nextValue[key];
-      return acc;
-    }, {});
-
-    // If Recebimento ends up as an array, use the first item
-    if (Array.isArray(upperCasedValues.ShipmentDate)) {
-      upperCasedValues.ShipmentDate = upperCasedValues.ShipmentDate[0];
-    }
-    // Convert "2025-03-13T03:00:00.000Z" to just "2025-03-13"
-    if (typeof upperCasedValues.ShipmentDate === 'string') {
-      upperCasedValues.ShipmentDate = upperCasedValues.ShipmentDate.split('T')[0];
-    }
-
-    handleChange(upperCasedValues);
-  }}
-  onSubmit={handleSubmit(onSubmit)}
->
-
+            className={styles.form}
+            value={values}
+            onChange={(nextValue) => {
+              // If Recebimento ends up as an array, use the first item
+              if (Array.isArray(nextValue.ShipmentDate)) {
+                nextValue.ShipmentDate = nextValue.ShipmentDate[0];
+              }
+              // Convert "2025-03-13T03:00:00.000Z" to just "2025-03-13"
+              if (typeof nextValue.ShipmentDate === 'string') {
+                nextValue.ShipmentDate = nextValue.ShipmentDate.split('T')[0];
+              }
+              handleChange(nextValue);
+            }}
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <Box direction="row" gap="medium" wrap>
               <FormField name="RC" label="RC" required>
                 <TextInput name="RC" value={values.RC} onChange={(e) => handleChange({ ...values, RC: e.target.value })} />
@@ -108,11 +108,12 @@ const MyForm = () => {
                     />
               </FormField>
             </Box>
-            <Box margin={{ top: 'medium' }}>
+            <Box direction="row" gap="medium" margin={{ top: 'medium' }}>
               <Button
+                className={styles.button}
                 type="submit"
                 primary
-                label={isSubmitting ? 'Salvando...' : 'Salvar'}
+                label="Salvar"
                 disabled={isSubmitting}
               />
             </Box>
