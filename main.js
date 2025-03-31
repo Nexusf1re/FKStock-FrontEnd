@@ -2,6 +2,7 @@ const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 const os = require("os");
 const path = require("path");
 const { exec } = require("child_process");
+require("dotenv").config();
 
 let mainWindow;
 
@@ -15,7 +16,8 @@ app.whenReady().then(() => {
     }
   });
 
-  mainWindow.loadURL("http://localhost:3001");
+  
+  mainWindow.loadURL(process.env.REACT_APP_LAB_URL);
 
   const menu = Menu.buildFromTemplate([
     {
