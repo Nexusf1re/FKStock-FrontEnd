@@ -4,31 +4,55 @@ import { grommet } from 'grommet/themes';
 import { SidebarTip as Sidebar } from '../../components/Sidebar/sidebar';
 import { useNavigate } from 'react-router-dom';
 import styles from './Home.module.css';
-import Username from '../../components/getUsername';
+import getUser from '../../utils/getUser'; // Ajuste o caminho conforme necessário
 
 const Home = () => {
     const [items, setItems] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_API_URL}/api/items`)
-            .then((res) => res.json())
-            .then((data) => {
-                setItems(data);
-            })
-            .catch((err) => console.error(err));
+        const fetchItems = async () => {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/items`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    setItems(data); // Certifique-se de que `data` é um array
+                } else {
+                    console.error('API response is not an array:', data);
+                    setItems([]); // Evita passar um objeto para o DataTable
+                }
+            } catch (error) {
+                console.error('Error fetching items:', error);
+                setItems([]); // Evita erros no DataTable
+            }
+        };
+    
+        fetchItems();
     }, []);
 
+    const formatCurrency = (value) => {
+        return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+        }).format(value);
+    };
+
     const columns = [
-        { property: 'Id', header: 'Id'},
-        { property: 'RC', header: 'RC', primary: true },
+        { property: 'Id', header: 'Id' },
+        { property: 'RC', header: 'RC', primary: true, search: true },
+        { property: 'RCLine', header: 'Linha RC' },
+        { property: 'SAPCode', header: 'Código SAP' },
+        { property: 'RCValue', header: 'Valor RC', render: (datum) => formatCurrency(datum.RCValue) },
         { property: 'Material', header: 'Material', search: true },
-        { property: 'Quantidade', header: 'Qtd' },
-        { property: 'Valor', header: 'Valor' },
-        { property: 'Valor_NF', header: 'Valor NF' },
-        { property: 'Un', header: 'Un' },
-        { property: 'Marca', header: 'Marca' },
-        { property: 'Recebimento', header: 'Recebimento' },
+        { property: 'Order', header: 'Pedido' },
+        { property: 'OrderValue', header: 'Valor Pedido', render: (datum) => formatCurrency(datum.OrderValue) },
+        { property: 'Un', header: 'Unidade' },
+        { property: 'Quantity', header: 'Quantidade' },
+        { property: 'Requester', header: 'Solicitante' },
+        { property: 'ShipmentDate', header: 'Data Remessa' },
     ];
 
     const handleRowClick = (event) => {
@@ -41,9 +65,9 @@ const Home = () => {
             <Box direction="row" fill>
                 <Sidebar />
                 <Box pad="medium" background="light-2" fill>
-                    <Heading level="2" margin="-17px 0px 0px 4px" color="#3c6aaf">
+                    <Heading level="2" margin="0px 0px 0px 4px" color="#3c6aaf">
                         Dados
-                        <Username />
+                        <getUser />
                     </Heading>
                     <Card background="white" margin={{ top: 'small' }} elevation="small" round="small" fill>
                         <CardHeader pad="medium" background="#3c6aaf">

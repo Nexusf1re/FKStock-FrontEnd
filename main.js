@@ -1,7 +1,6 @@
 const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 const os = require("os");
 const path = require("path");
-const { exec } = require("child_process");
 require("dotenv").config();
 
 let mainWindow;
